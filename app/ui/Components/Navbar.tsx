@@ -14,9 +14,6 @@ export default function Navbar() {
                     <Link href="/dashboard" legacyBehavior>
                         <a className="text-white">Dashboard</a>
                     </Link>
-                    <Link href="/portal/admin" legacyBehavior>
-                        <a className="text-white">Admin</a>
-                    </Link>
                 </div>
             </div>
         </nav>
