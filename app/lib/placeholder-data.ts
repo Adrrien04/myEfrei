@@ -1,10 +1,18 @@
-// This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
-// https://nextjs.org/learn/dashboard-app/fetching-data
-import { v4 as uuidv4 } from 'uuid';
+
+
+function generateStudentNumber(length: number): string {
+  const characters = '0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 const eleves = [
   {
-    id: uuidv4().slice(0, 8),
+    numeroetudiant: generateStudentNumber(8),
     nom: 'Dupont',
     prenom: 'Jean',
     mail: 'jean.dupont@efrei.com',
@@ -14,7 +22,7 @@ const eleves = [
     emploi_du_temps: '',
   },
   {
-    id: uuidv4().slice(0, 8),
+    numeroetudiant: generateStudentNumber(8),
     nom: 'Martin',
     prenom: 'Marie',
     mail: 'marie.martin@efrei.com',
@@ -27,7 +35,6 @@ const eleves = [
 
 const profs = [
   {
-    id: uuidv4().slice(0, 8),
     nom: 'Durand',
     prenom: 'Pierre',
     mail: 'pierre.durand@efrei.com',
@@ -35,7 +42,6 @@ const profs = [
     matiere: 'Mathématiques',
   },
   {
-    id: uuidv4().slice(0, 8),
     nom: 'Lefevre',
     prenom: 'Sophie',
     mail: 'sophie.lefevre@efrei.com',
@@ -46,11 +52,9 @@ const profs = [
 
 const cours = [
   {
-    id: uuidv4().slice(0, 8),
     nom: 'Mathématiques',
   },
   {
-    id: uuidv4().slice(0, 8),
     nom: 'Physique',
   },
 ];
@@ -69,4 +73,5 @@ const admins = [
     mdp: 'adminpass456',
   },
 ];
+
 export { eleves, profs, cours, admins };
