@@ -1,113 +1,120 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { eleves, profs, cours, admins } from '../lib/placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-async function seedUsers() {
+async function seedEleves() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS eleves (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      nom VARCHAR(255) NOT NULL,
+      prenom VARCHAR(255) NOT NULL,
+      mail TEXT NOT NULL UNIQUE,
+      mdp TEXT NOT NULL,
+      niveau VARCHAR(255) NOT NULL,
+      filliere VARCHAR(255) NOT NULL,
+      emploi_du_temps TEXT NOT NULL
     );
   `;
 
-  const insertedUsers = await Promise.all(
-    users.map(async (user) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
+  const insertedEleves = await Promise.all(
+    eleves.map(async (eleve) => {
+      const hashedPassword = await bcrypt.hash(eleve.mdp, 10);
       return sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+        INSERT INTO eleves (id, nom, prenom, mail, mdp, niveau, filliere, emploi_du_temps)
+        VALUES (${eleve.id}, ${eleve.nom}, ${eleve.prenom}, ${eleve.mail}, ${hashedPassword}, ${eleve.niveau}, ${eleve.filliere}, ${eleve.emploi_du_temps})
         ON CONFLICT (id) DO NOTHING;
       `;
     }),
   );
 
-  return insertedUsers;
+  return insertedEleves;
 }
 
-async function seedInvoices() {
+async function seedProfs() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
   await sql`
-    CREATE TABLE IF NOT EXISTS invoices (
+    CREATE TABLE IF NOT EXISTS profs (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      customer_id UUID NOT NULL,
-      amount INT NOT NULL,
-      status VARCHAR(255) NOT NULL,
-      date DATE NOT NULL
+      nom VARCHAR(255) NOT NULL,
+      prenom VARCHAR(255) NOT NULL,
+      mail TEXT NOT NULL UNIQUE,
+      mdp TEXT NOT NULL,
+      matiere VARCHAR(255) NOT NULL
     );
   `;
 
-  const insertedInvoices = await Promise.all(
-    invoices.map(
-      (invoice) => sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
+  const insertedProfs = await Promise.all(
+    profs.map(async (prof) => {
+      const hashedPassword = await bcrypt.hash(prof.mdp, 10);
+      return sql`
+        INSERT INTO profs (id, nom, prenom, mail, mdp, matiere)
+        VALUES (${prof.id}, ${prof.nom}, ${prof.prenom}, ${prof.mail}, ${hashedPassword}, ${prof.matiere})
+        ON CONFLICT (id) DO NOTHING;
+      `;
+    }),
+  );
+
+  return insertedProfs;
+}
+
+async function seedCours() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS cours (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      nom VARCHAR(255) NOT NULL
+    );
+  `;
+
+  const insertedCours = await Promise.all(
+    cours.map(
+      (cour) => sql`
+        INSERT INTO cours (id, nom)
+        VALUES (${cour.id}, ${cour.nom})
         ON CONFLICT (id) DO NOTHING;
       `,
     ),
   );
 
-  return insertedInvoices;
+  return insertedCours;
 }
 
-async function seedCustomers() {
+async function seedAdmins() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
   await sql`
-    CREATE TABLE IF NOT EXISTS customers (
+    CREATE TABLE IF NOT EXISTS admins (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL,
-      image_url VARCHAR(255) NOT NULL
+      nom VARCHAR(255) NOT NULL,
+      prenom VARCHAR(255) NOT NULL,
+      mail TEXT NOT NULL UNIQUE,
+      mdp TEXT NOT NULL
     );
   `;
 
-  const insertedCustomers = await Promise.all(
-    customers.map(
-      (customer) => sql`
-        INSERT INTO customers (id, name, email, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
+  const insertedAdmins = await Promise.all(
+    admins.map(async (admin) => {
+      const hashedPassword = await bcrypt.hash(admin.mdp, 10);
+      return sql`
+        INSERT INTO admins (id, nom, prenom, mail, mdp)
+        VALUES (uuid_generate_v4(), ${admin.nom}, ${admin.prenom}, ${admin.mail}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
+      `;
+    }),
   );
 
-  return insertedCustomers;
-}
-
-async function seedRevenue() {
-  await sql`
-    CREATE TABLE IF NOT EXISTS revenue (
-      month VARCHAR(4) NOT NULL UNIQUE,
-      revenue INT NOT NULL
-    );
-  `;
-
-  const insertedRevenue = await Promise.all(
-    revenue.map(
-      (rev) => sql`
-        INSERT INTO revenue (month, revenue)
-        VALUES (${rev.month}, ${rev.revenue})
-        ON CONFLICT (month) DO NOTHING;
-      `,
-    ),
-  );
-
-  return insertedRevenue;
+  return insertedAdmins;
 }
 
 export async function GET() {
   try {
     const result = await sql.begin((sql) => [
-      seedUsers(),
-      seedCustomers(),
-      seedInvoices(),
-      seedRevenue(),
+      seedEleves(),
+      seedProfs(),
+      seedCours(),
+      seedAdmins(),
     ]);
 
     return Response.json({ message: 'Database seeded successfully' });
