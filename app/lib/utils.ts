@@ -1,5 +1,16 @@
 import { Revenue } from './definitions';
 
+export const getToken = (): string | null => {
+  const match = document.cookie.match(/(^| )token=([^;]+)/);
+  return match ? match[2] : null;
+};
+
+export const isAuthenticated = (): boolean => {
+  const token = getToken();
+  return token !== null;
+};
+
+
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',

@@ -1,7 +1,9 @@
 import Navbar from '@/app/ui/Components/Navbar';
+import ProtectedRoute from '../ui/Components/ProtectedRoute';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
+        <ProtectedRoute>
         <div className="flex flex-col h-screen">
             <Navbar />
             <div className="flex flex-grow md:flex-row md:overflow-hidden">
@@ -10,5 +12,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
             </div>
         </div>
+        </ProtectedRoute>
     );
 }
