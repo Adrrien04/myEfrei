@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import AcmeLogo from "@/app/ui/acme-logo";
+import EfreiLogo from "@/app/ui/efrei-logo";
 
 export default function Navbar() {
     return (
@@ -7,7 +7,7 @@ export default function Navbar() {
             <div className="container mx-auto flex justify-between items-center">
                 <Link href="/" legacyBehavior>
                     <div className="w-32 text-white md:w-40">
-                        <AcmeLogo/>
+                        <EfreiLogo/>
                     </div>
                 </Link>
                 <div className="flex space-x-4">
