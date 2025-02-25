@@ -9,11 +9,11 @@ export async function POST(req: Request) {
         const { email, password } = await req.json();
 
         const users = await sql`
-            SELECT 'admins' AS role, mail, mdp FROM admins WHERE mail = ${email}
+            SELECT 'admins' AS role, mail, mdp, nom AS name, prenom AS surname FROM admins WHERE mail = ${email}
             UNION
-            SELECT 'profs' AS role, mail, mdp FROM profs WHERE mail = ${email}
+            SELECT 'profs' AS role, mail, mdp, nom AS name, prenom AS surname FROM profs WHERE mail = ${email}
             UNION
-            SELECT 'eleves' AS role, mail, mdp FROM eleves WHERE mail = ${email};
+            SELECT 'eleves' AS role, mail, mdp, nom AS name, prenom AS surname FROM eleves WHERE mail = ${email};
         `;
 
         if (users.length === 0) {
@@ -27,13 +27,13 @@ export async function POST(req: Request) {
         }
 
         const token = jwt.sign(
-            { email: user.mail, role: user.role },
+            { email: user.mail, name: user.name, surname: user.surname, role: user.role },
             process.env.AUTH_SECRET!,
             { expiresIn: '1h' }
         );
 
         const response = new Response(
-            JSON.stringify({ message: 'Connexion réussie.', role: user.role }),
+            JSON.stringify({ message: 'Connexion réussie.', role: user.role, token }),
             { status: 200 }
         );
 
