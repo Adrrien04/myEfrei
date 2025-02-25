@@ -12,10 +12,9 @@ export default function Page() {
                     alt={'logo'}
                     layout="fill"
                     objectFit="cover"
-                    className="rounded-r-lg"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                        <EfreiLogo width={450}  />
+                    <EfreiLogo width={650}/>
                 </div>
             </div>
 
@@ -38,7 +37,7 @@ export default function Page() {
                     alt="Pantheon logo"
                     width={900}
                     height={900}
-                    className="absolute right-[-450px] top-[600px] transform -translate-y-1/2 opacity-5 max-w-none max-h-none pointer-events-none"
+                    className="absolute right-[-450px] top-[800px] transform -translate-y-1/2 opacity-5 max-w-none max-h-none pointer-events-none"
 
                 />
             </div>
