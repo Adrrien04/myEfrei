@@ -38,7 +38,7 @@ export default function Page() {
                     alt="Pantheon logo"
                     width={900}
                     height={900}
-                    className="absolute right-[-450px] top-[600px] transform -translate-y-1/2 opacity-5 max-w-none max-h-none"
+                    className="absolute right-[-450px] top-[600px] transform -translate-y-1/2 opacity-5 max-w-none max-h-none pointer-events-none"
 
                 />
             </div>
