@@ -1,9 +1,10 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 const Login = () => {
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -15,43 +16,58 @@ const Login = () => {
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('token', data.token);
+            const data = await response.json();
 
-                switch (data.role) {
-                    case 'admins':
-                        router.push('/portal/admin');
-                        break;
-                    case 'profs':
-                        router.push('/portal/teacher');
-                        break;
-                    case 'eleves':
-                        router.push('/portal/student');
-                        break;
-                    default:
-                        console.error('Unknown role');
-                        break;
-                }
-            } else {
-                console.error('Failed to login');
+            if (!response.ok) {
+                setErrorMessage(data.error || 'Une erreur est survenue.');
+                return;
+            }
+
+            localStorage.setItem('token', data.token);
+
+            switch (data.role) {
+                case 'admins':
+                    router.push('/portal/admin');
+                    break;
+                case 'profs':
+                    router.push('/portal/teacher');
+                    break;
+                case 'eleves':
+                    router.push('/portal/student');
+                    break;
+                default:
+                    setErrorMessage('Rôle inconnu.');
             }
         } catch (error) {
-            console.error('Failed to login', error);
+            setErrorMessage('Erreur de connexion au serveur.');
         }
     };
 
     return (
-        <form onSubmit={handleLogin}>
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Login</button>
+        <form onSubmit={handleLogin} className="space-y-4">
+            <input
+                type="email" name="email" placeholder="Email"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                required
+            />
+            <input
+                type="password" name="password" placeholder="Mot de passe"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                required
+            />
+            {errorMessage && (
+                <p className="text-red-600 text-sm">{errorMessage}</p>
+            )}
+            <button
+                type="submit"
+                className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            >
+                Se connecter
+            </button>
         </form>
     );
 };
