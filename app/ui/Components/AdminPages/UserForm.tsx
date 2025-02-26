@@ -1,14 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const UserForm = ({ onClose, onAdd }: { onClose: () => void; onAdd: (user: any) => void }) => {
-    const [nom, setNom] = useState("");
-    const [prenom, setPrenom] = useState("");
-    const [mail, setMail] = useState("");
-    const [role, setRole] = useState("Élève");
-    const [niveau, setNiveau] = useState("L1"); 
-    const [filiere, setFiliere] = useState("Informatique");
-    const [emploiDuTemps, setEmploiDuTemps] = useState("Non défini"); // ✅ Ajout du champ emploi_du_temps
+const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; onAdd: (user: any) => void }) => {
+    const [nom, setNom] = useState(user?.nom || "");
+    const [prenom, setPrenom] = useState(user?.prenom || "");
+    const [mail, setMail] = useState(user?.mail || "");
+    const [role, setRole] = useState(user?.role || "Élève");
+    const [niveau, setNiveau] = useState(user?.niveau || "L1");
+    const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
+    const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "Non défini");
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -19,9 +19,9 @@ const UserForm = ({ onClose, onAdd }: { onClose: () => void; onAdd: (user: any) 
 
         try {
             const response = await fetch("/api/admin/users", {
-                method: "POST",
+                method: user ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nom, prenom, mail, role, niveau, filiere, emploi_du_temps: emploiDuTemps }), // ✅ Ajout de emploi_du_temps
+                body: JSON.stringify({ id: user?.id, nom, prenom, mail, role, niveau, filiere, emploi_du_temps: emploiDuTemps }),
             });
 
             const data = await response.json();
@@ -33,14 +33,16 @@ const UserForm = ({ onClose, onAdd }: { onClose: () => void; onAdd: (user: any) 
             }
 
             onAdd(data);
-            setSuccess("Utilisateur ajouté avec succès !");
-            setNom("");
-            setPrenom("");
-            setMail("");
-            setRole("Élève");
-            setNiveau("L1"); 
-            setFiliere("Informatique");
-            setEmploiDuTemps("Non défini"); // ✅ Réinitialisation
+            setSuccess(user ? "Utilisateur mis à jour avec succès !" : "Utilisateur ajouté avec succès !");
+            if (!user) {
+                setNom("");
+                setPrenom("");
+                setMail("");
+                setRole("Élève");
+                setNiveau("L1");
+                setFiliere("Informatique");
+                setEmploiDuTemps("Non défini");
+            }
 
         } catch (error) {
             console.error("❌ Erreur:", error);
@@ -51,7 +53,7 @@ const UserForm = ({ onClose, onAdd }: { onClose: () => void; onAdd: (user: any) 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h2 className="text-xl font-bold mb-4">➕ Ajouter un utilisateur</h2>
+                <h2 className="text-xl font-bold mb-4">{user ? "✏️ Modifier un utilisateur" : "➕ Ajouter un utilisateur"}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input type="text" placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="text" placeholder="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="w-full p-2 border rounded" required />
@@ -88,7 +90,7 @@ const UserForm = ({ onClose, onAdd }: { onClose: () => void; onAdd: (user: any) 
                     {error && <p className="text-red-500">{error}</p>}
                     {success && <p className="text-green-500">{success}</p>}
 
-                    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Ajouter</button>
+                    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">{user ? "Modifier" : "Ajouter"}</button>
                     <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
                 </form>
             </div>

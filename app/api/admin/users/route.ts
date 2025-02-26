@@ -111,3 +111,60 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ error: "Erreur lors de la suppression de l'utilisateur" }, { status: 500 });
     }
 }
+
+export async function PUT(req: Request) {
+    try {
+        const { id, role, nom, prenom, mail, niveau, filiere, emploi_du_temps } = await req.json();
+        console.log("🟢 PUT /api/admin/users - Données reçues:", { id, role, nom, prenom, mail, niveau, filiere, emploi_du_temps });
+
+        if (!id || !role || !nom || !prenom || !mail) {
+            console.log("⚠️ Données invalides");
+            return NextResponse.json({ error: "ID, rôle, nom, prénom et mail requis" }, { status: 400 });
+        }
+
+        if (role === "Élève" && (!niveau || !filiere)) {
+            console.log("⚠️ Niveau ou filière manquants");
+            return NextResponse.json({ error: "Le niveau et la filière sont requis pour les élèves" }, { status: 400 });
+        }
+
+        const emploiDuTempsFinal = emploi_du_temps ?? "Non défini";
+
+        let query;
+        if (role === "Élève") {
+            query = sql`
+                UPDATE eleves
+                SET nom = ${nom}, prenom = ${prenom}, mail = ${mail}, niveau = ${niveau}, filiere = ${filiere}, emploi_du_temps = ${emploiDuTempsFinal}
+                WHERE numeroetudiant = ${id}
+                    RETURNING numeroetudiant AS id, nom, prenom, mail, niveau, filiere, emploi_du_temps, 'Élève' AS role;
+            `;
+        } else if (role === "Professeur") {
+            query = sql`
+                UPDATE profs
+                SET nom = ${nom}, prenom = ${prenom}, mail = ${mail}
+                WHERE id = ${id}
+                    RETURNING id, nom, prenom, mail, 'Professeur' AS role;
+            `;
+        } else if (role === "Admin") {
+            query = sql`
+                UPDATE admins
+                SET nom = ${nom}, prenom = ${prenom}, mail = ${mail}
+                WHERE id = ${id}
+                    RETURNING id, nom, prenom, mail, 'Admin' AS role;
+            `;
+        } else {
+            return NextResponse.json({ error: "Rôle invalide" }, { status: 400 });
+        }
+
+        const [updatedUser] = await query;
+        if (!updatedUser) {
+            console.log("⚠️ Aucune mise à jour effectuée");
+            return NextResponse.json({ error: "Aucun utilisateur trouvé pour cet ID et rôle" }, { status: 404 });
+        }
+
+        console.log("✅ Utilisateur mis à jour:", updatedUser);
+        return NextResponse.json(updatedUser);
+    } catch (error) {
+        console.error("❌ Erreur PUT /api/admin/users:", error);
+        return NextResponse.json({ error: "Erreur lors de la mise à jour de l'utilisateur" }, { status: 500 });
+    }
+}
