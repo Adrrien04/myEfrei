@@ -4,8 +4,9 @@ type ModalContent = {
     id: number;
     title: string;
     content: string;
-    image_url?: string;
+    image_url: string | null;
 };
+
 
 const useModal = () => {
     const [isOpen, setIsOpen] = useState(false);

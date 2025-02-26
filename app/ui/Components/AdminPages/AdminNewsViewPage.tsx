@@ -47,17 +47,15 @@ const AdminNewsViewPage = () => {
         event.preventDefault();
         if (!editArticle) return;
 
-        // Validation des champs avant de soumettre
         const { title, content, image_url } = editArticle;
         if (!title || !content) {
             alert('Le titre et le contenu sont requis');
             return;
         }
 
-        // Mettre image_url à null si elle est undefined
         const updatedArticle = {
             ...editArticle,
-            image_url: image_url || null, // Remplacer undefined ou une chaîne vide par null
+            image_url: image_url || null,
         };
 
         try {
