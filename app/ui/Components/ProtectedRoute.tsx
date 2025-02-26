@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import EfreiPantheonTotalLogo from "@/app/ui/efrei-pantheon-total-logo";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
@@ -11,14 +12,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         const checkAuth = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                // Si aucun token n'est trouvé, rediriger vers la page de connexion
                 console.log('No token found, redirecting to login');
                 router.push('/login');
                 return;
             }
 
             try {
-                // Vérification du token auprès de l'API
                 const response = await fetch('/api/auth/check', {
                     method: 'GET',
                     headers: {
@@ -27,20 +26,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
                 });
 
                 if (response.ok) {
-                    // Si le token est valide, mettre l'état de l'authentification à true
                     console.log('Token is valid');
                     setIsAuthenticated(true);
                 } else {
-                    // Si le token est invalide, rediriger vers la page de connexion
                     console.log('Token is invalid, redirecting to login');
                     router.push('/login');
                 }
             } catch (error) {
                 console.error('Failed to verify token', error);
-                // Si la vérification échoue, rediriger vers la page de connexion
                 router.push('/login');
             } finally {
-                // Charger l'état final (qu'il y ait ou non une erreur)
                 setLoading(false);
             }
         };
@@ -49,16 +44,19 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }, [router]);
 
     if (loading) {
-        // Si l'état est en train de se charger, afficher un message de chargement
-        return <div>Loading...</div>;
+        return <div>
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <EfreiPantheonTotalLogo/>
+                <div
+                    className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        </div>;
     }
 
-    // Si l'utilisateur n'est pas authentifié, ne rien afficher
     if (!isAuthenticated) {
         return null;
     }
 
-    // Si l'utilisateur est authentifié, afficher le contenu protégé
     return <>{children}</>;
 };
 
