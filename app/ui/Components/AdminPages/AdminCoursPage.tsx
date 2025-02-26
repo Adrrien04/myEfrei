@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import AssignCourse from "./AssignCourse";
 
 const AdminCoursPage = () => {
     const [cours, setCours] = useState<{ id: string; nom: string; prof_nom: string; prof_prenom: string; matiere: string }[]>([]);
@@ -107,6 +108,7 @@ const handleDeleteCours = async (id: string) => {
         setMessage("❌ Erreur lors de la suppression");
     }
 };
+    
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
@@ -177,7 +179,10 @@ const handleDeleteCours = async (id: string) => {
                         </tbody>
                     </table>
                 </div>
+                
             </div>
+            <div className="mb-6"></div>
+            <AssignCourse></AssignCourse>
 
             {showModal && (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
