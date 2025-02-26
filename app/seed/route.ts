@@ -17,7 +17,7 @@ function generateStudentNumber(length: number): string {
 async function seedEleves() {
     await sql`
         CREATE TABLE IF NOT EXISTS eleves (
-                                              numeroetudiant VARCHAR(8) PRIMARY KEY,
+            numeroetudiant VARCHAR(8) PRIMARY KEY,
             nom VARCHAR(255) NOT NULL,
             prenom VARCHAR(255) NOT NULL,
             mail TEXT NOT NULL UNIQUE,
@@ -25,7 +25,7 @@ async function seedEleves() {
             niveau VARCHAR(255) NOT NULL,
             filliere VARCHAR(255) NOT NULL,
             emploi_du_temps TEXT NOT NULL
-            );
+        );
     `;
 
     const insertedEleves = await Promise.all(
@@ -34,16 +34,16 @@ async function seedEleves() {
             return sql`
                 INSERT INTO eleves (numeroetudiant, nom, prenom, mail, mdp, niveau, filliere, emploi_du_temps)
                 VALUES (
-                           ${eleve.numeroetudiant ?? generateStudentNumber(8)},
-                           ${eleve.nom ?? ''},
-                           ${eleve.prenom ?? ''},
-                           ${eleve.mail ?? ''},
-                           ${hashedPassword},
-                           ${eleve.niveau ?? ''},
-                           ${eleve.filliere ?? ''},
-                           ${eleve.emploi_du_temps ?? ''}
-                       )
-                    ON CONFLICT (numeroetudiant) DO NOTHING;
+                    ${eleve.numeroetudiant ?? generateStudentNumber(8)},
+                    ${eleve.nom ?? ''},
+                    ${eleve.prenom ?? ''},
+                    ${eleve.mail ?? ''},
+                    ${hashedPassword},
+                    ${eleve.niveau ?? ''},
+                    ${eleve.filliere ?? ''},
+                    ${eleve.emploi_du_temps ?? ''}
+                )
+                ON CONFLICT (numeroetudiant) DO NOTHING;
             `;
         }),
     );
@@ -54,13 +54,13 @@ async function seedEleves() {
 async function seedProfs() {
     await sql`
         CREATE TABLE IF NOT EXISTS profs (
-                                             id VARCHAR(8) PRIMARY KEY,
+            id VARCHAR(8) PRIMARY KEY,
             nom VARCHAR(255) NOT NULL,
             prenom VARCHAR(255) NOT NULL,
             mail TEXT NOT NULL UNIQUE,
             mdp TEXT NOT NULL,
             matiere VARCHAR(255) NOT NULL
-            );
+        );
     `;
 
     const insertedProfs = await Promise.all(
@@ -83,15 +83,14 @@ async function seedProfs() {
 
     return insertedProfs;
 }
-
 async function seedCours() {
     try {
         await sql`
-      CREATE TABLE IF NOT EXISTS cours (
-        id VARCHAR(8) PRIMARY KEY,
-        nom VARCHAR(255) NOT NULL
-      );
-    `;
+            CREATE TABLE IF NOT EXISTS cours (
+                id VARCHAR(8) PRIMARY KEY,
+                nom VARCHAR(255) NOT NULL
+            );
+        `;
         console.log('Table cours created successfully');
     } catch (error) {
         console.error('Error creating table cours:', error);
@@ -102,10 +101,10 @@ async function seedCours() {
             (cour) => sql`
                 INSERT INTO cours (id, nom)
                 VALUES (
-                           ${generateStudentNumber(8)},
-                           ${cour.nom ?? ''}
-                       )
-                    ON CONFLICT (id) DO NOTHING;
+                    ${generateStudentNumber(8)},
+                    ${cour.nom ?? ''}
+                )
+                ON CONFLICT (id) DO NOTHING;
             `,
         ),
     );
@@ -116,12 +115,12 @@ async function seedCours() {
 async function seedAdmins() {
     await sql`
         CREATE TABLE IF NOT EXISTS admins (
-                                              id VARCHAR(8) DEFAULT ${generateStudentNumber(8)} PRIMARY KEY,
+            id VARCHAR(8) PRIMARY KEY,
             nom VARCHAR(255) NOT NULL,
             prenom VARCHAR(255) NOT NULL,
             mail TEXT NOT NULL UNIQUE,
             mdp TEXT NOT NULL
-            );
+        );
     `;
 
     const insertedAdmins = await Promise.all(
@@ -130,13 +129,13 @@ async function seedAdmins() {
             return sql`
                 INSERT INTO admins (id, nom, prenom, mail, mdp)
                 VALUES (
-                           ${generateStudentNumber(8)},
-                           ${admin.nom ?? ''},
-                           ${admin.prenom ?? ''},
-                           ${admin.mail ?? ''},
-                           ${hashedPassword}
-                       )
-                    ON CONFLICT (id) DO NOTHING;
+                    ${generateStudentNumber(8)},
+                    ${admin.nom ?? ''},
+                    ${admin.prenom ?? ''},
+                    ${admin.mail ?? ''},
+                    ${hashedPassword}
+                )
+                ON CONFLICT (id) DO NOTHING;
             `;
         }),
     );
