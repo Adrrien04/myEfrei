@@ -1,3 +1,9 @@
-export default function Page() {
-    return <p>Admin</p>;
-}
+const AdminPage = () => {
+    return (
+            <div className="container mx-auto p-4">
+               admin
+            </div>
+    );
+};
+
+export default AdminPage;

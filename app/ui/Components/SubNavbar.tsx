@@ -39,15 +39,32 @@ const SubNavbar = () => {
 
     return null;
 };
+const AdminSubNavbar = () => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-const AdminSubNavbar = () => (
-    <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">
-        <ul className="flex space-x-4">
-            <li><a href="/portal/admin/dashboard" className="hover:underline">Dashboard</a></li>
-            <li><a href="/portal/admin/users" className="hover:underline">Manage Users</a></li>
-        </ul>
-    </nav>
-);
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    return (
+        <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">
+            <ul className="flex space-x-4">
+                <li><a href="/portal/admin/dashboard" className="hover:underline">Dashboard</a></li>
+                <li><a href="/portal/admin/users" className="hover:underline">Manage Users</a></li>
+                <li className="relative">
+                    <button onClick={toggleDropdown} className="hover:underline">Manage News</button>
+                    {isDropdownOpen && (
+                        <ul className="absolute bg-white border rounded-lg mt-2 shadow-lg">
+                            <li><a href="/portal/admin/news/view" className="block px-4 py-2 hover:bg-gray-100">View and Edit News</a></li>
+                            <li><a href="/portal/admin/news/write" className="block px-4 py-2 hover:bg-gray-100">Write News</a></li>
+                        </ul>
+                    )}
+                </li>
+            </ul>
+        </nav>
+    );
+};
+
 
 const ProfSubNavbar = () => (
     <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">
