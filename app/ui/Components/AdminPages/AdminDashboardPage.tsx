@@ -26,45 +26,58 @@ const AdminDashboardPage = () => {
     }, []);
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6">📊 Tableau de bord Admin</h1>
-            
-            {/* Cartes Statistiques */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 shadow rounded-lg text-center">
+        <div className="max-w-7xl mx-auto p-6">
+        
+            <div className="relative bg-blue-700 text-white p-8 rounded-lg shadow-lg mb-6">
+                <h1 className="text-3xl font-bold">📊 Tableau de bord Admin</h1>
+                <p className="mt-2">Bienvenue sur votre espace de gestion. Accédez aux statistiques et gérez les utilisateurs, articles et événements.</p>
+            </div>
+
+        
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-white p-6 shadow rounded-lg text-center border border-blue-300">
                     <h2 className="text-lg font-semibold">👤 Utilisateurs</h2>
-                    <p className="text-3xl font-bold">{stats.users}</p>
+                    <p className="text-4xl font-bold text-blue-600">{stats.users}</p>
                 </div>
-                <div className="bg-white p-6 shadow rounded-lg text-center">
+                <div className="bg-white p-6 shadow rounded-lg text-center border border-green-300">
                     <h2 className="text-lg font-semibold">📰 Articles</h2>
-                    <p className="text-3xl font-bold">{stats.articles}</p>
+                    <p className="text-4xl font-bold text-green-600">{stats.articles}</p>
                 </div>
-                <div className="bg-white p-6 shadow rounded-lg text-center">
+                <div className="bg-white p-6 shadow rounded-lg text-center border border-red-300">
                     <h2 className="text-lg font-semibold">📅 Événements</h2>
-                    <p className="text-3xl font-bold">{stats.events}</p>
+                    <p className="text-4xl font-bold text-red-600">{stats.events}</p>
                 </div>
             </div>
 
-            {/* Actions Rapides */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <a href="/portal/admin/users" className="bg-blue-500 text-white text-center p-4 rounded-lg hover:bg-blue-600">
+        
+            <h2 className="text-2xl font-bold mb-4">⚡ Actions rapides</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <a href="/portal/admin/users" className="bg-blue-500 text-white text-center p-4 rounded-lg hover:bg-blue-600 transition">
                     👥 Gérer les utilisateurs
                 </a>
-                <a href="/portal/admin/news/view" className="bg-green-500 text-white text-center p-4 rounded-lg hover:bg-green-600">
+                <a href="/portal/admin/news/view" className="bg-green-500 text-white text-center p-4 rounded-lg hover:bg-green-600 transition">
                     📰 Voir les articles
                 </a>
-                <a href="/portal/admin/news/write" className="bg-yellow-500 text-white text-center p-4 rounded-lg hover:bg-yellow-600">
+                <a href="/portal/admin/news/write" className="bg-yellow-500 text-white text-center p-4 rounded-lg hover:bg-yellow-600 transition">
                     ✍️ Rédiger un article
                 </a>
-                <a href="/portal/admin/cours" className="bg-purple-500 text-white text-center p-4 rounded-lg hover:bg-purple-600">
+                <a href="/portal/admin/cours" className="bg-purple-500 text-white text-center p-4 rounded-lg hover:bg-purple-600 transition">
                     📚 Gérer les cours
                 </a>
-                <a href="/portal/admin/events" className="bg-red-500 text-white text-center p-4 rounded-lg hover:bg-red-600">
+                <a href="/portal/admin/events" className="bg-red-500 text-white text-center p-4 rounded-lg hover:bg-red-600 transition">
                     📅 Gérer les événements
                 </a>
-                <a href="/portal/admin/logs" className="bg-gray-500 text-white text-center p-4 rounded-lg hover:bg-gray-600">
+                <a href="/portal/admin/logs" className="bg-gray-500 text-white text-center p-4 rounded-lg hover:bg-gray-600 transition">
                     🔔 Voir les logs
                 </a>
+            </div>
+
+        
+            <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-lg">
+                <h2 className="text-xl font-bold mb-4">📢 Infos & Assistance</h2>
+                <p className="text-gray-700">
+                    Besoin d'aide ? Consultez la <a href="/portal/help" className="text-blue-600 underline">FAQ</a> ou contactez l'équipe support.
+                </p>
             </div>
         </div>
     );

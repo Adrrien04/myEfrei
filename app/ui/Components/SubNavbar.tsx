@@ -51,6 +51,7 @@ const AdminSubNavbar = () => {
             <ul className="flex space-x-4">
                 <li><a href="/portal/admin/dashboard" className="hover:underline">Dashboard</a></li>
                 <li><a href="/portal/admin/users" className="hover:underline">Manage Users</a></li>
+                <li><a href="/portal/admin/cours" className="hover:underline">Manage Courses </a></li>
                 <li className="relative">
                     <button onClick={toggleDropdown} className="hover:underline">Manage News</button>
                     {isDropdownOpen && (

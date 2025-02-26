@@ -1,9 +1,5 @@
-const AdminPage = () => {
-    return (
-            <div className="container mx-auto p-4">
-               admin
-            </div>
-    );
-};
+import AdminDashboardPage from "@/app/ui/Components/AdminPages/AdminDashboardPage";
 
-export default AdminPage;
+export default function AdminDashboard() {
+    return <AdminDashboardPage />;
+}

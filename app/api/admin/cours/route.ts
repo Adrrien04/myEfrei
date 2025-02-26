@@ -3,7 +3,7 @@ import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: { rejectUnauthorized: false } });
 
-// ✅ Récupérer tous les cours avec le professeur et la matière
+
 export async function GET() {
     try {
         const cours = await sql`
@@ -18,7 +18,7 @@ export async function GET() {
     }
 }
 
-// ✅ Ajouter un cours avec un professeur et une matière
+
 function generateCourseId(): string {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
 }
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     }
 }
 
-// ✅ Supprimer un cours
+
 export async function DELETE(req: Request) {
     try {
         const { id } = await req.json();
