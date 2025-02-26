@@ -3,9 +3,7 @@ import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: { rejectUnauthorized: false } });
 
-/**
- * ✅ GET: Récupérer toutes les attributions (cours ↔ élèves)
- */
+
 export async function GET() {
     try {
         console.log("🟢 GET /api/admin/attributions - Récupération des attributions");
@@ -24,9 +22,7 @@ const attributions = await sql`
     }
 }
 
-/**
- * ✅ POST: Ajouter une attribution (associer un élève à un cours)
- */
+
 export async function POST(req: Request) {
     try {
         const { id_cours, id_etudiant } = await req.json();
@@ -37,7 +33,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "L'ID du cours et de l'élève sont requis" }, { status: 400 });
         }
 
-        // Vérifier si l'attribution existe déjà
+      
         const existing = await sql`
             SELECT * FROM attributions WHERE id_cours = ${id_cours} AND id_etudiant = ${id_etudiant}
         `;
@@ -46,7 +42,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "L'élève est déjà inscrit à ce cours" }, { status: 400 });
         }
 
-        // Ajouter l'attribution
+        
         const [newAttribution] = await sql`
             INSERT INTO attributions (id_cours, id_etudiant, date_attribution)
             VALUES (${id_cours}, ${id_etudiant}, NOW())
@@ -61,9 +57,7 @@ export async function POST(req: Request) {
     }
 }
 
-/**
- * ✅ DELETE: Supprimer une attribution (retirer un élève d'un cours)
- */
+
 export async function DELETE(req: Request) {
     try {
         const { id } = await req.json();
