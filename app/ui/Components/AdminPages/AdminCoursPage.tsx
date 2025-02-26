@@ -9,6 +9,7 @@ const AdminCoursPage = () => {
     const [matiere, setMatiere] = useState("");
     const [message, setMessage] = useState<string | null>(null);
     const [showModal, setShowModal] = useState(false);
+    const [editingCours, setEditingCours] = useState<{ id: string; nom: string; id_prof: string; matiere: string } | null>(null);
 
     useEffect(() => {
         fetchCours();
@@ -51,14 +52,67 @@ const AdminCoursPage = () => {
         }
     };
 
+const handleEditCours = (cours: any) => {
+    setEditingCours(cours);  
+    setNomCours(cours.nom);
+    setIdProf(cours.id_prof);
+    setMatiere(cours.matiere);
+    setShowModal(true); 
+};
+const handleUpdateCours = async () => {
+    if (!editingCours) return;
+
+    try {
+        const response = await fetch("/api/admin/cours", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                id: editingCours.id, 
+                nom: nomCours, 
+                id_prof: idProf, 
+                matiere: matiere 
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Échec de la mise à jour");
+        }
+
+        setMessage("✅ Cours mis à jour !");
+        setShowModal(false);
+        setEditingCours(null);
+        fetchCours(); 
+    } catch (error) {
+        setMessage("❌ Erreur lors de la mise à jour");
+    }
+};
+
+const handleDeleteCours = async (id: string) => {
+    if (!confirm("⚠️ Êtes-vous sûr de vouloir supprimer ce cours ?")) return;
+
+    try {
+        const response = await fetch(`/api/admin/cours`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Échec de la suppression");
+        }
+
+        setMessage("✅ Cours supprimé !");
+        fetchCours(); 
+    } catch (error) {
+        setMessage("❌ Erreur lors de la suppression");
+    }
+};
+
     return (
         <div className="p-6 max-w-6xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-center">📚 Gestion des Cours</h1>
 
-           
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                
                 <div className="bg-white p-6 shadow-lg rounded-lg border">
                     <h2 className="text-xl font-bold mb-4">➕ Ajouter un Cours</h2>
                     <button onClick={() => setShowModal(true)} className="bg-green-600 text-white w-full p-2 rounded">
@@ -66,7 +120,6 @@ const AdminCoursPage = () => {
                     </button>
                 </div>
 
-                
                 <div className="bg-white p-6 shadow-lg rounded-lg border">
                     <h2 className="text-xl font-bold mb-4">👨‍🏫 Professeurs Disponibles</h2>
                     <ul className="list-disc list-inside">
@@ -82,7 +135,6 @@ const AdminCoursPage = () => {
                     </ul>
                 </div>
 
-                
                 <div className="bg-white p-6 shadow-lg rounded-lg border col-span-2">
                     <h2 className="text-xl font-bold mb-4">📌 Cours existants</h2>
                     <table className="w-full border-collapse border border-gray-300">
@@ -102,8 +154,18 @@ const AdminCoursPage = () => {
                                         <td className="border p-2">{c.matiere}</td>
                                         <td className="border p-2">{c.prof_nom} {c.prof_prenom}</td>
                                         <td className="border p-2">
-                                            <button className="bg-blue-500 text-white px-2 py-1 mr-2 rounded">Modifier</button>
-                                            <button className="bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
+                                            <button 
+                                                className="bg-blue-500 text-white px-2 py-1 mr-2 rounded"
+                                                onClick={() => handleEditCours(c)}
+                                            >
+                                                Modifier
+                                            </button>
+                                            <button 
+                                                className="bg-red-500 text-white px-2 py-1 rounded"
+                                                onClick={() => handleDeleteCours(c.id)}
+                                            >
+                                                Supprimer
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -117,32 +179,72 @@ const AdminCoursPage = () => {
                 </div>
             </div>
 
-            
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h2 className="text-xl font-bold mb-4">🆕 Ajouter un cours</h2>
-                        <input type="text" placeholder="Nom du cours" value={nomCours} onChange={(e) => setNomCours(e.target.value)}
-                            className="w-full p-2 border rounded mb-2" />
-                        <select value={idProf} onChange={(e) => setIdProf(e.target.value)}
-                            className="w-full p-2 border rounded mb-2">
-                            <option value="">Sélectionner un professeur</option>
-                            {professeurs.map((prof) => (
-                                <option key={prof.id} value={prof.id}>
-                                    {prof.nom} {prof.prenom} - {prof.matiere}
-                                </option>
-                            ))}
-                        </select>
-                        <input type="text" placeholder="Matière" value={matiere} onChange={(e) => setMatiere(e.target.value)}
-                            className="w-full p-2 border rounded mb-2" />
-                        <div className="flex justify-between">
-                            <button onClick={handleAddCours} className="px-4 py-2 bg-blue-600 text-white rounded">Ajouter</button>
-                            <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
-                        </div>
-                        {message && <p className="mt-4 text-red-500">{message}</p>}
-                    </div>
-                </div>
-            )}
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">
+                {editingCours ? "✏️ Modifier le cours" : "🆕 Ajouter un cours"}
+            </h2>
+
+            <input 
+                type="text" 
+                placeholder="Nom du cours" 
+                value={editingCours?.nom || nomCours} 
+                onChange={(e) => editingCours 
+                    ? setEditingCours({ ...editingCours, nom: e.target.value }) 
+                    : setNomCours(e.target.value)}
+                className="w-full p-2 border rounded mb-2" 
+                required
+            />
+
+            <select 
+                value={editingCours?.id_prof || idProf} 
+                onChange={(e) => editingCours 
+                    ? setEditingCours({ ...editingCours, id_prof: e.target.value }) 
+                    : setIdProf(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
+                required
+            >
+                <option value="">Sélectionner un professeur</option>
+                {professeurs.map((prof) => (
+                    <option key={prof.id} value={prof.id}>
+                        {prof.nom} {prof.prenom} - {prof.matiere}
+                    </option>
+                ))}
+            </select>
+
+            <input 
+                type="text" 
+                placeholder="Matière" 
+                value={editingCours?.matiere || matiere} 
+                onChange={(e) => editingCours 
+                    ? setEditingCours({ ...editingCours, matiere: e.target.value }) 
+                    : setMatiere(e.target.value)}
+                className="w-full p-2 border rounded mb-2" 
+                required
+            />
+
+            
+            {message && <p className="text-red-500">{message}</p>}
+
+            
+            <div className="flex justify-between">
+                <button 
+                    onClick={editingCours ? handleUpdateCours : handleAddCours} 
+                    className="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                    Sauvegarder
+                </button>
+                <button 
+                    onClick={() => { setShowModal(false); setEditingCours(null); }} 
+                    className="px-4 py-2 bg-gray-400 text-white rounded"
+                >
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 };

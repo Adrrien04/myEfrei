@@ -46,19 +46,42 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Erreur lors de l'ajout du cours" }, { status: 500 });
     }
 }
+export async function PUT(req: Request) {
+    try {
+        const { id, nom, id_prof, matiere } = await req.json();
+
+        if (!id || !nom || !id_prof || !matiere) {
+            return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
+        }
+
+        await sql`
+            UPDATE cours 
+            SET nom = ${nom}, id_prof = ${id_prof}, matiere = ${matiere} 
+            WHERE id = ${id}
+        `;
+
+        return NextResponse.json({ message: "Cours mis à jour avec succès" });
+    } catch (error) {
+        console.error("❌ Erreur PUT /api/admin/cours:", error);
+        return NextResponse.json({ error: "Erreur lors de la mise à jour du cours" }, { status: 500 });
+    }
+}
+
 
 
 export async function DELETE(req: Request) {
     try {
         const { id } = await req.json();
+
         if (!id) {
-            return NextResponse.json({ error: "L'ID du cours est requis" }, { status: 400 });
+            return NextResponse.json({ error: "ID requis pour la suppression" }, { status: 400 });
         }
 
         await sql`DELETE FROM cours WHERE id = ${id}`;
+
         return NextResponse.json({ message: "Cours supprimé avec succès" });
     } catch (error) {
-        console.error("❌ Erreur DELETE /api/admin/cours :", error);
+        console.error("❌ Erreur DELETE /api/admin/cours:", error);
         return NextResponse.json({ error: "Erreur lors de la suppression du cours" }, { status: 500 });
     }
 }
