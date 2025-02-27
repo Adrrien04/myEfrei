@@ -5,11 +5,11 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
     const [nom, setNom] = useState(user?.nom || "");
     const [prenom, setPrenom] = useState(user?.prenom || "");
     const [mail, setMail] = useState(user?.mail || "");
-    const [password, setPassword] = useState("");  // Ajout du champ mot de passe
+    const [password, setPassword] = useState(""); 
     const [role, setRole] = useState(user?.role || "Élève");
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
-    const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "Non défini");
+    const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "");
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -27,7 +27,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     nom, 
                     prenom, 
                     mail, 
-                    password,  // Envoyer le mot de passe
+                    password, 
                     role, 
                     niveau, 
                     filiere, 
@@ -96,6 +96,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                                 <option>Mathématiques</option>
                                 <option>Physique</option>
                                 <option>Biologie</option>
+                                <option>Chimie</option>
+                                <option>Economie</option>
                             </select>
 
                             <input type="text" placeholder="Emploi du temps" value={emploiDuTemps} onChange={(e) => setEmploiDuTemps(e.target.value)} className="w-full p-2 border rounded" />
