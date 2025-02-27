@@ -4,17 +4,15 @@ import jwt from "jsonwebtoken";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: { rejectUnauthorized: false } });
 
-function getTokenFromCookie(request: NextRequest) {
-    const cookie = request.headers.get("cookie");
-    if (!cookie) return null;
-
-    const match = cookie.match(/auth_token=([^;]+)/);
-    return match ? match[1] : null;
-}
-
 export async function GET(req: NextRequest) {
-    const token = getTokenFromCookie(req);
-    console.log("🔍 Token récupéré :", token);
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        console.log("Aucun token dans l'en-tête");
+        return NextResponse.json({ authenticated: false }, { status: 401 });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token récupéré :", token);
 
     if (!token) {
         return NextResponse.json({ authenticated: false }, { status: 401 });
@@ -22,20 +20,16 @@ export async function GET(req: NextRequest) {
 
     try {
         const decoded = jwt.verify(token, process.env.AUTH_SECRET!) as any;
-        console.log("✅ Token décodé :", decoded);
+        console.log("Token décodé :", decoded);
 
         let emploiDuTemps = null;
-
-        // Récupérer l'emploi du temps **seulement si c'est un élève**
-      if (decoded.role === "eleve") {
-    const [student] = await sql`
-        SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${decoded.numeroetudiant}
-    `;
-
-    console.log("📌 Résultat SQL - emploi du temps récupéré :", student);
-
-    emploiDuTemps = student?.emploi_du_temps ?? "Aucun cours prévu";
-}
+        if (decoded.role === "eleve") {
+            const [student] = await sql`
+                SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${decoded.numeroetudiant}
+            `;
+            console.log("Résultat SQL - emploi du temps récupéré :", student);
+            emploiDuTemps = student?.emploi_du_temps ?? "Aucun cours prévu";
+        }
 
         return NextResponse.json({
             authenticated: true,
@@ -44,11 +38,11 @@ export async function GET(req: NextRequest) {
             surname: decoded.surname,
             role: decoded.role,
             numeroetudiant: decoded.numeroetudiant || null,
-            emploi_du_temps: emploiDuTemps, // Ajout de l'emploi du temps !
+            emploi_du_temps: emploiDuTemps,
         });
-        
+
     } catch (error) {
-        console.log("❌ Token invalide :", error);
+        console.log("Token invalide :", error);
         return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 }

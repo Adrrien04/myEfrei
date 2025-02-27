@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         const checkAuth = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.log('No token found, redirecting to login');
+                console.log('Aucun token trouvé, redirection vers login');
                 router.push('/login');
                 return;
             }
@@ -26,14 +26,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
                 });
 
                 if (response.ok) {
-                    console.log('Token is valid');
+                    console.log('Token valide');
                     setIsAuthenticated(true);
                 } else {
-                    console.log('Token is invalid, redirecting to login');
+                    console.log('Token invalide, redirection vers login');
+                    localStorage.removeItem('token');
                     router.push('/login');
                 }
             } catch (error) {
-                console.error('Failed to verify token', error);
+                console.error('Erreur lors de la vérification du token', error);
+                localStorage.removeItem('token');
                 router.push('/login');
             } finally {
                 setLoading(false);
@@ -44,13 +46,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }, [router]);
 
     if (loading) {
-        return <div>
+        return (
             <div className="flex flex-col items-center justify-center min-h-screen">
-                <EfreiPantheonTotalLogo/>
-                <div
-                    className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <EfreiPantheonTotalLogo />
+                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
-        </div>;
+        );
     }
 
     if (!isAuthenticated) {
