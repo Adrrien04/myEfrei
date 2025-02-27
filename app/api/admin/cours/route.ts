@@ -24,25 +24,36 @@ function generateCourseId(): string {
 }
 export async function POST(req: Request) {
     try {
-        const { nom, id_prof, matiere } = await req.json();
-        console.log("🟢 POST /api/admin/cours - Données reçues:", { nom, id_prof, matiere });
+        const { nom, id_prof, matiere, jour, horaire } = await req.json();
+        console.log("🟢 POST /api/admin/cours - Données reçues:", { nom, id_prof, matiere, jour, horaire });
 
-        if (!nom || !id_prof || !matiere) {
-            return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
+        // ✅ Vérification des champs obligatoires
+        if (!nom || !id_prof || !matiere || !jour || !horaire) {
+            return NextResponse.json({ error: "Tous les champs sont requis (nom, id_prof, matiere, jour, horaire)" }, { status: 400 });
         }
 
+        // ✅ Vérification si le professeur existe
+        const [profExists] = await sql`
+            SELECT id FROM profs WHERE id = ${id_prof}
+        `;
+        if (!profExists) {
+            return NextResponse.json({ error: "Professeur introuvable" }, { status: 404 });
+        }
+
+        // ✅ Génération de l'ID du cours
         const courseId = generateCourseId();
 
+        // ✅ Insertion du cours avec jour et horaire
         const [newCourse] = await sql`
-            INSERT INTO cours (id, nom, id_prof, matiere)
-            VALUES (${courseId}, ${nom}, ${id_prof}, ${matiere})
-            RETURNING id, nom, id_prof, matiere;
+            INSERT INTO cours (id, nom, id_prof, matiere, jour, horaire)
+            VALUES (${courseId}, ${nom}, ${id_prof}, ${matiere}, ${jour}, ${horaire})
+            RETURNING id, nom, id_prof, matiere, jour, horaire;
         `;
 
-        console.log("✅ Cours ajouté :", newCourse);
+        console.log("✅ Cours ajouté avec succès :", newCourse);
         return NextResponse.json(newCourse);
     } catch (error) {
-        console.error("❌ Erreur POST /api/admin/cours :", error);
+        console.error("❌ Erreur lors de l'ajout du cours :", error);
         return NextResponse.json({ error: "Erreur lors de l'ajout du cours" }, { status: 500 });
     }
 }

@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; onAdd: (user: any) => void }) => {
     const [nom, setNom] = useState(user?.nom || "");
     const [prenom, setPrenom] = useState(user?.prenom || "");
     const [mail, setMail] = useState(user?.mail || "");
+    const [password, setPassword] = useState("");  // Ajout du champ mot de passe
     const [role, setRole] = useState(user?.role || "Élève");
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
@@ -15,13 +16,23 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, role, niveau, filiere, emploiDuTemps });
+        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, password, role, niveau, filiere, emploiDuTemps });
 
         try {
             const response = await fetch("/api/admin/users", {
                 method: user ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: user?.id, nom, prenom, mail, role, niveau, filiere, emploi_du_temps: emploiDuTemps }),
+                body: JSON.stringify({ 
+                    id: user?.id, 
+                    nom, 
+                    prenom, 
+                    mail, 
+                    password,  // Envoyer le mot de passe
+                    role, 
+                    niveau, 
+                    filiere, 
+                    emploi_du_temps: emploiDuTemps 
+                }),
             });
 
             const data = await response.json();
@@ -38,6 +49,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                 setNom("");
                 setPrenom("");
                 setMail("");
+                setPassword("");  // Réinitialisation du mot de passe
                 setRole("Élève");
                 setNiveau("L1");
                 setFiliere("Informatique");
@@ -58,6 +70,9 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     <input type="text" placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="text" placeholder="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="email" placeholder="Email" value={mail} onChange={(e) => setMail(e.target.value)} className="w-full p-2 border rounded" required />
+                    
+                    
+                    <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded" required />
 
                     <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded">
                         <option>Élève</option>

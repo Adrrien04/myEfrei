@@ -1,78 +1,48 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: { rejectUnauthorized: false } });
 
-
-export async function GET() {
+export async function POST(req: NextRequest) {
     try {
-        console.log("🟢 GET /api/admin/attributions - Récupération des attributions");
+        const { id_cours, id_etudiant, jour, horaire } = await req.json();
+        console.log("🟢 POST /api/admin/attributions - Données reçues:", { id_cours, id_etudiant, jour, horaire });
 
-const attributions = await sql`
-    SELECT a.id, a.id_cours, c.nom AS cours_nom,
-    e.numeroetudiant, e.nom AS etudiant_nom, e.prenom AS etudiant_prenom, e.filiere
-    FROM attributions a
-    JOIN cours c ON a.id_cours = c.id
-    JOIN eleves e ON a.id_etudiant = e.numeroetudiant
-`;
-        return NextResponse.json(attributions);
-    } catch (error) {
-        console.error("❌ Erreur GET /api/admin/attributions :", error);
-        return NextResponse.json({ error: "Erreur lors de la récupération des attributions" }, { status: 500 });
-    }
-}
-
-
-export async function POST(req: Request) {
-    try {
-        const { id_cours, id_etudiant } = await req.json();
-        console.log("🟢 POST /api/admin/attributions - Données reçues:", { id_cours, id_etudiant });
-
-        if (!id_cours || !id_etudiant) {
-            console.log("⚠️ Données invalides");
-            return NextResponse.json({ error: "L'ID du cours et de l'élève sont requis" }, { status: 400 });
-        }
-
-      
-        const existing = await sql`
-            SELECT * FROM attributions WHERE id_cours = ${id_cours} AND id_etudiant = ${id_etudiant}
-        `;
-
-        if (existing.length > 0) {
-            return NextResponse.json({ error: "L'élève est déjà inscrit à ce cours" }, { status: 400 });
+        if (!id_cours || !id_etudiant || !jour || !horaire) {
+            return NextResponse.json({ error: "Tous les champs sont requis (cours, étudiant, jour, horaire)" }, { status: 400 });
         }
 
         
-        const [newAttribution] = await sql`
-            INSERT INTO attributions (id_cours, id_etudiant, date_attribution)
-            VALUES (${id_cours}, ${id_etudiant}, NOW())
-            RETURNING id, id_cours, id_etudiant;
+        const [cours] = await sql`
+            SELECT nom FROM cours WHERE id = ${id_cours}
         `;
 
-        console.log("✅ Attribution ajoutée:", newAttribution);
-        return NextResponse.json(newAttribution);
-    } catch (error) {
-        console.error("❌ Erreur POST /api/admin/attributions :", error);
-        return NextResponse.json({ error: "Erreur lors de l'ajout de l'attribution" }, { status: 500 });
-    }
-}
-
-
-export async function DELETE(req: Request) {
-    try {
-        const { id } = await req.json();
-        console.log("🟢 DELETE /api/admin/attributions - ID reçu:", id);
-
-        if (!id) {
-            return NextResponse.json({ error: "L'ID de l'attribution est requis" }, { status: 400 });
+        if (!cours) {
+            return NextResponse.json({ error: "Cours introuvable" }, { status: 404 });
         }
 
-        await sql`DELETE FROM attributions WHERE id = ${id}`;
+    
+        const [student] = await sql`
+            SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${id_etudiant}
+        `;
 
-        console.log("✅ Attribution supprimée:", id);
-        return NextResponse.json({ message: "Attribution supprimée avec succès" });
+        
+        const newCourseEntry = `${jour} | ${horaire} | ${cours.nom}`;
+
+        
+        const updatedSchedule = student?.emploi_du_temps 
+            ? `${student.emploi_du_temps}\n${newCourseEntry}`
+            : newCourseEntry;
+
+        await sql`
+            UPDATE eleves SET emploi_du_temps = ${updatedSchedule} WHERE numeroetudiant = ${id_etudiant}
+        `;
+
+        console.log("✅ Attribution enregistrée et emploi du temps mis à jour :", updatedSchedule);
+        return NextResponse.json({ message: "Attribution réussie !" });
+
     } catch (error) {
-        console.error("❌ Erreur DELETE /api/admin/attributions :", error);
-        return NextResponse.json({ error: "Erreur lors de la suppression de l'attribution" }, { status: 500 });
+        console.error("❌ Erreur POST /api/admin/attributions :", error);
+        return NextResponse.json({ error: "Erreur lors de l'attribution" }, { status: 500 });
     }
 }
