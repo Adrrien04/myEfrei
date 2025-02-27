@@ -11,11 +11,22 @@ const SchedulePage = () => {
     useEffect(() => {
         const fetchSchedule = async () => {
             try {
-                const response = await fetch("/api/auth/check");
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("Utilisateur non connecté (token manquant)");
+                }
+
+                const response = await fetch("/api/auth/check", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
                 const userData = await response.json();
 
                 if (!response.ok || !userData.authenticated) {
-                    throw new Error("Utilisateur non connecté");
+                    throw new Error("Utilisateur non authentifié");
                 }
 
                 const numeroEtudiant = userData.numeroetudiant;
@@ -23,7 +34,13 @@ const SchedulePage = () => {
                     throw new Error("Numéro d'étudiant non trouvé");
                 }
 
-                const scheduleResponse = await fetch(`/api/student/schedule?numeroetudiant=${numeroEtudiant}`);
+                const scheduleResponse = await fetch(`/api/student/schedule?numeroetudiant=${numeroEtudiant}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
                 const scheduleData = await scheduleResponse.json();
 
                 if (!scheduleResponse.ok || !scheduleData.emploi_du_temps) {
@@ -63,29 +80,29 @@ const SchedulePage = () => {
 
             <table className="w-full border-collapse border border-gray-300 mt-4">
                 <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border p-2">Heures</th>
-                        {jours.map((jour) => (
-                            <th key={jour} className="border p-2">{jour}</th>
-                        ))}
-                    </tr>
+                <tr className="bg-gray-200">
+                    <th className="border p-2">Heures</th>
+                    {jours.map((jour) => (
+                        <th key={jour} className="border p-2">{jour}</th>
+                    ))}
+                </tr>
                 </thead>
                 <tbody>
-                    {heures.map((heure, index) => (
-                        <tr key={index} className="border">
-                            <td className="border p-2 font-bold">{heure}</td>
-                            {jours.map((jour, jIndex) => (
-                                <td key={jIndex} className="border p-2 text-center">
-                                    {schedule[jour]?.[heure] || "⏳ (Vide)"}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                {heures.map((heure, index) => (
+                    <tr key={index} className="border">
+                        <td className="border p-2 font-bold">{heure}</td>
+                        {jours.map((jour, jIndex) => (
+                            <td key={jIndex} className="border p-2 text-center">
+                                {schedule[jour]?.[heure] || "⏳ (Vide)"}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
                 </tbody>
             </table>
 
             <p className="text-gray-600">
-                {Object.keys(schedule).length > 0 
+                {Object.keys(schedule).length > 0
                     ? "📌 Emploi du temps reçu"
                     : "Aucun cours prévu cette semaine"}
             </p>

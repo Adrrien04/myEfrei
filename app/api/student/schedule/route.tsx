@@ -4,27 +4,19 @@ import jwt from "jsonwebtoken";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: { rejectUnauthorized: false } });
 
-function getTokenFromCookie(req: NextRequest) {
-    const cookie = req.headers.get("cookie");
-    console.log("🍪 Cookies reçus :", cookie);
-
-    if (!cookie) return null;
-
-    const match = cookie.match(/auth_token=([^;]+)/);
-    console.log("🔍 Token extrait des cookies :", match ? match[1] : "Aucun");
-
-    return match ? match[1] : null;
-}
-
 export async function GET(req: NextRequest) {
     try {
-        const token = getTokenFromCookie(req);
-        if (!token) {
-            console.log("❌ Aucun token trouvé dans les cookies, utilisateur non connecté.");
+        const authHeader = req.headers.get("Authorization");
+        console.log("🔍 En-tête Authorization reçu :", authHeader);
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            console.log("❌ Aucun token trouvé dans les en-têtes, utilisateur non connecté.");
             return NextResponse.json({ error: "Utilisateur non connecté" }, { status: 401 });
         }
 
-        
+        const token = authHeader.split(" ")[1];
+        console.log("🔑 Token extrait :", token);
+
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.AUTH_SECRET!) as any;
@@ -46,7 +38,7 @@ export async function GET(req: NextRequest) {
         `;
 
         if (!student) {
-            console.log("❌ Étudiant non trouvé pour l'email :", decoded.email);
+            console.log("❌ Étudiant non trouvé pour le numéro :", decoded.numeroetudiant);
             return NextResponse.json({ error: "Étudiant non trouvé" }, { status: 404 });
         }
 
