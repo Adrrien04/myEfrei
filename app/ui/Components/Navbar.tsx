@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import EfreiLogo from '@/app/ui/efrei-logo';
 
 export default function Navbar() {
     const [role, setRole] = useState<string | null>(null);
     const [user, setUser] = useState<{ name: string; surname: string; role: string } | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -26,6 +28,11 @@ export default function Navbar() {
         }
     }, []);
 
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        router.push('/login');
+    };
+
     return (
         <nav className="bg-blue-500 p-4">
             <div className="container mx-auto flex justify-between items-center">
@@ -36,7 +43,6 @@ export default function Navbar() {
                         </div>
                     </Link>
 
-
                     {role && (
                         <span className="flex items-center text-white text-sm px-3 py-1 border border-orange-500 rounded-full">
                             <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
@@ -45,11 +51,19 @@ export default function Navbar() {
                     )}
                 </div>
 
-                <div className="flex space-x-4">
+                <div className="flex space-x-4 items-center">
                     {user && (
-                        <Link href="/dashboard" legacyBehavior>
-                            <a className="text-white text-lg font-medium hover:underline">{`${user.surname} ${user.name.toUpperCase()}`}</a>
-                        </Link>
+                        <>
+                            <Link href="/dashboard" legacyBehavior>
+                                <a className="text-white text-lg font-medium hover:underline">{`${user.surname} ${user.name.toUpperCase()}`}</a>
+                            </Link>
+                            <button
+                                onClick={handleSignOut}
+                                className="text-white text-sm bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600"
+                            >
+                                Sign Out
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
