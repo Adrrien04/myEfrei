@@ -9,7 +9,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
     const [role, setRole] = useState(user?.role || "Élève");
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
-    const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "Non défini");
+    const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "");
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -22,16 +22,16 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
             const response = await fetch("/api/admin/users", {
                 method: user ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    id: user?.id, 
-                    nom, 
-                    prenom, 
-                    mail, 
+                body: JSON.stringify({
+                    id: user?.id,
+                    nom,
+                    prenom,
+                    mail,
                     password,
-                    role, 
-                    niveau, 
-                    filiere, 
-                    emploi_du_temps: emploiDuTemps 
+                    role,
+                    niveau,
+                    filiere,
+                    emploi_du_temps: emploiDuTemps
                 }),
             });
 
@@ -70,8 +70,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     <input type="text" placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="text" placeholder="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="email" placeholder="Email" value={mail} onChange={(e) => setMail(e.target.value)} className="w-full p-2 border rounded" required />
-                    
-                    
+
+
                     <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded" required />
 
                     <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded">
@@ -100,6 +100,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                                 <option>Ingénierie & Numérique</option>
                                 <option>Management</option>
                                 <option>Mathématique</option>
+                                <option>Chimie</option>
+                                <option>Economie</option>
                             </select>
 
                             <input type="text" placeholder="Emploi du temps" value={emploiDuTemps}

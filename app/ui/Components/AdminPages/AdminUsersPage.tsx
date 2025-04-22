@@ -77,6 +77,28 @@ const AdminUsersPage = () => {
         }
     };
 
+    const handleDelete = async (id: string, role: string) => {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/admin/users`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, role }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete user');
+            }
+            setUsers(users.filter(user => user.id !== id));
+        } catch (error) {
+            console.error('Failed to delete user:', error);
+        }
+    };
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">👥 Gérer les utilisateurs</h1>
@@ -163,7 +185,12 @@ const AdminUsersPage = () => {
                                 >
                                     Modifier
                                 </button>
-                                <button className="bg-red-500 text-white px-2 py-1 rounded">Supprimer</button>
+                                <button
+                                    onClick={() => handleDelete(user.id, user.role)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded"
+                                >
+                                    Supprimer
+                                </button>
                             </td>
                         </tr>
                     ))}
