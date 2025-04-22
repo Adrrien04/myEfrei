@@ -52,7 +52,7 @@ const SchedulePage = () => {
                     }
                     if (cours.includes("|")) {
                         const [nomCours, professeur] = cours.split("|").map(p => p.trim());
-                        parsedSchedule[jour][heure] = `${nomCours}<br/><span class='text-sm text-gray-500'>Prof : ${professeur}</span>`;
+                        parsedSchedule[jour][heure] = `${nomCours}<br/><span class='text-sm text-gray-500'> Professeur : ${professeur}</span>`;
                     } else {
                         parsedSchedule[jour][heure] = cours;
                     }

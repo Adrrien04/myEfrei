@@ -103,7 +103,7 @@ const AdminUsersPage = () => {
         }
     };
 
- const handleAddUser = async (newUser) => {
+ const handleAddUser = async (newUser: any) => {
     const id = generateShortId();  // Générer un ID
     try {
         const response = await fetch("/api/admin/users", {
