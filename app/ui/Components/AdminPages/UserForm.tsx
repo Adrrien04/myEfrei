@@ -5,18 +5,19 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
     const [nom, setNom] = useState(user?.nom || "");
     const [prenom, setPrenom] = useState(user?.prenom || "");
     const [mail, setMail] = useState(user?.mail || "");
-    const [password, setPassword] = useState(""); 
+    const [password, setPassword] = useState("");
     const [role, setRole] = useState(user?.role || "Élève");
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
     const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "");
+    const [matiere, setMatiere] = useState(user?.matiere || ""); // ✅ Ajout de la matière
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, password, role, niveau, filiere, emploiDuTemps });
+        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, password, role, niveau, filiere, emploiDuTemps, matiere });
 
         try {
             const response = await fetch("/api/admin/users", {
@@ -31,7 +32,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     role, 
                     niveau, 
                     filiere, 
-                    emploi_du_temps: emploiDuTemps 
+                    emploi_du_temps: emploiDuTemps,
+                    matiere: role === "Professeur" ? matiere : undefined // ✅ Ajout de la matière uniquement pour les professeurs
                 }),
             });
 
@@ -49,11 +51,12 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                 setNom("");
                 setPrenom("");
                 setMail("");
-                setPassword("");  // Réinitialisation du mot de passe
+                setPassword("");  
                 setRole("Élève");
                 setNiveau("L1");
                 setFiliere("Informatique");
-                setEmploiDuTemps("Non défini");
+                setEmploiDuTemps("");
+                setMatiere(""); // ✅ Réinitialisation de la matière
             }
 
         } catch (error) {
@@ -70,8 +73,6 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     <input type="text" placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="text" placeholder="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} className="w-full p-2 border rounded" required />
                     <input type="email" placeholder="Email" value={mail} onChange={(e) => setMail(e.target.value)} className="w-full p-2 border rounded" required />
-                    
-                    
                     <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded" required />
 
                     <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded">
@@ -97,11 +98,15 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                                 <option>Physique</option>
                                 <option>Biologie</option>
                                 <option>Chimie</option>
-                                <option>Economie</option>
+                                <option>Économie</option>
                             </select>
 
                             <input type="text" placeholder="Emploi du temps" value={emploiDuTemps} onChange={(e) => setEmploiDuTemps(e.target.value)} className="w-full p-2 border rounded" />
                         </>
+                    )}
+
+                    {role === "Professeur" && (
+                        <input type="text" placeholder="Matière enseignée" value={matiere} onChange={(e) => setMatiere(e.target.value)} className="w-full p-2 border rounded" required />
                     )}
 
                     {error && <p className="text-red-500">{error}</p>}

@@ -12,14 +12,11 @@ const SchedulePage = () => {
         const fetchSchedule = async () => {
             try {
                 const token = localStorage.getItem("token");
-                if (!token) {
-                    throw new Error("Utilisateur non connecté (token manquant)");
-                }
+                if (!token) throw new Error("Utilisateur non connecté (token manquant)");
 
                 const response = await fetch("/api/auth/check", {
-                    method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
@@ -29,34 +26,36 @@ const SchedulePage = () => {
                     throw new Error("Utilisateur non authentifié");
                 }
 
-                const numeroEtudiant = userData.numeroetudiant;
-                if (!numeroEtudiant) {
-                    throw new Error("Numéro d'étudiant non trouvé");
-                }
-
-                const scheduleResponse = await fetch(`/api/student/schedule?numeroetudiant=${numeroEtudiant}`, {
-                    method: "GET",
+                const scheduleResponse = await fetch(`/api/student/schedule?numeroetudiant=${userData.numeroetudiant}`, {
                     headers: {
-                        "Authorization": `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
                 const scheduleData = await scheduleResponse.json();
-
+                console.log("⏳ contenu brut emploi_du_temps :", scheduleData.emploi_du_temps);
                 if (!scheduleResponse.ok || !scheduleData.emploi_du_temps) {
                     throw new Error("Aucun emploi du temps trouvé");
                 }
 
-                console.log("📌 Emploi du temps récupéré :", scheduleData.emploi_du_temps);
-
                 const parsedSchedule: Record<string, Record<string, string>> = {};
 
                 scheduleData.emploi_du_temps.split("\n").forEach((entry: string) => {
-                    const [jour, heure, cours] = entry.split(" | ");
+                    const parts = entry.split("|").map(p => p.trim()); 
+                    if (parts.length < 3) return; 
+                
+                    const [jour, heure, ...coursParts] = parts;
+                    const cours = coursParts.join(" | "); 
+                
                     if (!parsedSchedule[jour]) {
                         parsedSchedule[jour] = {};
                     }
-                    parsedSchedule[jour][heure] = cours;
+                    if (cours.includes("|")) {
+                        const [nomCours, professeur] = cours.split("|").map(p => p.trim());
+                        parsedSchedule[jour][heure] = `${nomCours}<br/><span class='text-sm text-gray-500'>Prof : ${professeur}</span>`;
+                    } else {
+                        parsedSchedule[jour][heure] = cours;
+                    }
                 });
 
                 setSchedule(parsedSchedule);
@@ -80,31 +79,29 @@ const SchedulePage = () => {
 
             <table className="w-full border-collapse border border-gray-300 mt-4">
                 <thead>
-                <tr className="bg-gray-200">
-                    <th className="border p-2">Heures</th>
-                    {jours.map((jour) => (
-                        <th key={jour} className="border p-2">{jour}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {heures.map((heure, index) => (
-                    <tr key={index} className="border">
-                        <td className="border p-2 font-bold">{heure}</td>
-                        {jours.map((jour, jIndex) => (
-                            <td key={jIndex} className="border p-2 text-center">
-                                {schedule[jour]?.[heure] || "⏳ (Vide)"}
-                            </td>
+                    <tr className="bg-gray-200">
+                        <th className="border p-2">Heures</th>
+                        {jours.map((jour) => (
+                            <th key={jour} className="border p-2">{jour}</th>
                         ))}
                     </tr>
-                ))}
+                </thead>
+                <tbody>
+                    {heures.map((heure, index) => (
+                        <tr key={index} className="border">
+                            <td className="border p-2 font-bold">{heure}</td>
+                            {jours.map((jour, jIndex) => (
+                                <td key={jIndex} className="border p-2 text-center">
+                                    <div dangerouslySetInnerHTML={{ __html: schedule[jour]?.[heure] || "" }} />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
-            <p className="text-gray-600">
-                {Object.keys(schedule).length > 0
-                    ? "📌 Emploi du temps reçu"
-                    : "Aucun cours prévu cette semaine"}
+            <p className="text-center text-gray-500 mt-4">
+                {Object.keys(schedule).length === 0 ? "Aucun cours attribué pour le moment." : ""}
             </p>
         </div>
     );

@@ -12,24 +12,27 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Tous les champs sont requis (cours, étudiant, jour, horaire)" }, { status: 400 });
         }
 
-        
+        // ✅ Récupérer le nom du cours ET le nom du professeur
         const [cours] = await sql`
-            SELECT nom FROM cours WHERE id = ${id_cours}
+            SELECT c.nom AS cours_nom, p.nom AS prof_nom, p.prenom AS prof_prenom
+            FROM cours c
+            JOIN profs p ON c.id_prof = p.id
+            WHERE c.id = ${id_cours}
         `;
 
         if (!cours) {
-            return NextResponse.json({ error: "Cours introuvable" }, { status: 404 });
+            return NextResponse.json({ error: "Cours ou professeur introuvable" }, { status: 404 });
         }
 
-    
+        // ✅ Récupération de l'emploi du temps actuel
         const [student] = await sql`
             SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${id_etudiant}
         `;
 
-        
-        const newCourseEntry = `${jour} | ${horaire} | ${cours.nom}`;
+        // ✅ Format de l'entrée avec professeur
+        const newCourseEntry = `${jour} | ${horaire} | ${cours.cours_nom}\n           Professeur : ${cours.prof_prenom} ${cours.prof_nom}`;
 
-        
+        // ✅ Mise à jour de l'emploi du temps
         const updatedSchedule = student?.emploi_du_temps 
             ? `${student.emploi_du_temps}\n${newCourseEntry}`
             : newCourseEntry;
@@ -38,7 +41,7 @@ export async function POST(req: NextRequest) {
             UPDATE eleves SET emploi_du_temps = ${updatedSchedule} WHERE numeroetudiant = ${id_etudiant}
         `;
 
-        console.log("✅ Attribution enregistrée et emploi du temps mis à jour :", updatedSchedule);
+        console.log("✅ Attribution enregistrée et emploi du temps mis à jour !");
         return NextResponse.json({ message: "Attribution réussie !" });
 
     } catch (error) {

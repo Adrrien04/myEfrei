@@ -2,6 +2,10 @@
 import { useState, useEffect } from "react";
 import UserForm from "./UserForm";
 
+function generateShortId(): string {
+    return Math.random().toString(36).substr(2, 8).toUpperCase();
+}
+
 const AdminUsersPage = () => {
     const [users, setUsers] = useState<{ id: string; nom: string; prenom: string; mail: string; role: string; niveau?: string }[]>([]);
     const [filteredUsers, setFilteredUsers] = useState(users);
@@ -99,6 +103,25 @@ const AdminUsersPage = () => {
         }
     };
 
+ const handleAddUser = async (newUser) => {
+    const id = generateShortId();  // Générer un ID
+    try {
+        const response = await fetch("/api/admin/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...newUser, id }),  // Ajouter l'ID manuellement
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to add user");
+        }
+        const addedUser = await response.json();
+        setUsers([...users, addedUser]);
+    } catch (error) {
+        console.error("Failed to add user:", error);
+    }
+};
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">👥 Gérer les utilisateurs</h1>
@@ -113,10 +136,7 @@ const AdminUsersPage = () => {
             {isAdding && (
                 <UserForm
                     onClose={() => setIsAdding(false)}
-                    onAdd={(newUser) => {
-                        setUsers([...users, newUser]);
-                        setIsAdding(false);
-                    }}
+                    onAdd={handleAddUser}
                 />
             )}
 
