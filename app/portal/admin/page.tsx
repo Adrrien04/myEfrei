@@ -1,5 +1,5 @@
-import AdminDashboardPage from "@/app/ui/Components/AdminPages/AdminDashboardPage";
+import HomePage from "@/app/portal/common/page";
 
 export default function AdminDashboard() {
-    return <AdminDashboardPage />;
+    return <HomePage />;
 }

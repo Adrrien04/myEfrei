@@ -13,7 +13,7 @@ export default function Navbar() {
         if (token) {
             try {
                 const decodedPayload = JSON.parse(atob(token.split('.')[1]));
-                console.log('Decoded Payload:', decodedPayload); // Log the decoded payload
+                console.log('Decoded Payload:', decodedPayload);
 
                 if (decodedPayload.role) {
                     setRole(decodedPayload.role);
@@ -30,11 +30,12 @@ export default function Navbar() {
         <nav className="bg-blue-500 p-4">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center space-x-4">
-                    <Link href="/" legacyBehavior>
-                        <div className="w-32 text-white md:w-40">
+                    <Link href="/portal/common" legacyBehavior>
+                        <div className="w-32 text-white md:w-40 cursor-pointer">
                             <EfreiLogo />
                         </div>
                     </Link>
+
 
                     {role && (
                         <span className="flex items-center text-white text-sm px-3 py-1 border border-orange-500 rounded-full">

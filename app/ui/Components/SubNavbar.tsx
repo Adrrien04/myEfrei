@@ -39,11 +39,19 @@ const SubNavbar = () => {
 
     return null;
 };
-const AdminSubNavbar = () => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+const AdminSubNavbar = () => {
+    const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
+    const [isSlidesDropdownOpen, setIsSlidesDropdownOpen] = useState(false);
+
+    const toggleNewsDropdown = () => {
+        setIsNewsDropdownOpen(!isNewsDropdownOpen);
+        setIsSlidesDropdownOpen(false); // Close the other dropdown
+    };
+
+    const toggleSlidesDropdown = () => {
+        setIsSlidesDropdownOpen(!isSlidesDropdownOpen);
+        setIsNewsDropdownOpen(false); // Close the other dropdown
     };
 
     return (
@@ -51,13 +59,22 @@ const AdminSubNavbar = () => {
             <ul className="flex space-x-4">
                 <li><a href="/portal/admin/dashboard" className="hover:underline">Dashboard</a></li>
                 <li><a href="/portal/admin/users" className="hover:underline">Manage Users</a></li>
-                <li><a href="/portal/admin/cours" className="hover:underline">Manage Courses </a></li>
+                <li><a href="/portal/admin/cours" className="hover:underline">Manage Courses</a></li>
                 <li className="relative">
-                    <button onClick={toggleDropdown} className="hover:underline">Manage News</button>
-                    {isDropdownOpen && (
+                    <button onClick={toggleNewsDropdown} className="hover:underline">Manage News</button>
+                    {isNewsDropdownOpen && (
                         <ul className="absolute bg-white border rounded-lg mt-2 shadow-lg">
                             <li><a href="/portal/admin/news/view" className="block px-4 py-2 hover:bg-gray-100">View and Edit News</a></li>
                             <li><a href="/portal/admin/news/write" className="block px-4 py-2 hover:bg-gray-100">Write News</a></li>
+                        </ul>
+                    )}
+                </li>
+                <li className="relative">
+                    <button onClick={toggleSlidesDropdown} className="hover:underline">Manage Slides</button>
+                    {isSlidesDropdownOpen && (
+                        <ul className="absolute bg-white border rounded-lg mt-2 shadow-lg">
+                            <li><a href="/portal/admin/slides/view" className="block px-4 py-2 hover:bg-gray-100">View and Edit Slides</a></li>
+                            <li><a href="/portal/admin/slides/create" className="block px-4 py-2 hover:bg-gray-100">Create Slide</a></li>
                         </ul>
                     )}
                 </li>
@@ -65,7 +82,6 @@ const AdminSubNavbar = () => {
         </nav>
     );
 };
-
 
 const ProfSubNavbar = () => (
     <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">

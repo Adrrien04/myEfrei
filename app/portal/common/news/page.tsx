@@ -1,26 +1,17 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
 import useModal from '@/app/ui/hooks/useModal';
-
-interface Article {
-    id: number;
-    title: string;
-    content: string;
-    image_url: string;
-}
+import { Article, getNews } from '@/app/ui/Components/News/getNews';
 
 const NewsPage = () => {
     const [articles, setArticles] = useState<Article[]>([]);
-    const { isOpen, openModal, closeModal, selectedItem, maxHeight } = useModal();
+    const { isOpen, openModal, closeModal, selectedItem } = useModal();
 
     useEffect(() => {
-        const fetchArticles = async () => {
-            const response = await fetch('/api/articles');
-            const data = await response.json();
-            setArticles(data);
-        };
-
-        fetchArticles();
+        getNews()
+            .then(setArticles)
+            .catch((error) => console.error(error));
     }, []);
 
     const formatContent = (content: string) => {
@@ -49,7 +40,6 @@ const NewsPage = () => {
             {isOpen && selectedItem && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg max-w-4xl w-full max-h-[80vh] overflow-y-auto relative">
-                        {/* Bouton de fermeture dans le coin supérieur droit du modal */}
                         <button
                             className="absolute top-2 right-2 text-black text-3xl font-bold hover:text-gray-600"
                             onClick={closeModal}
