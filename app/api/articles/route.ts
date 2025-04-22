@@ -16,17 +16,19 @@ async function createTableIfNotExists() {
 
 export async function POST(req: Request) {
     try {
-        await createTableIfNotExists();
-
         const { title, content, image_url } = await req.json();
-
+        if (!title || !content) {
+            return new Response(JSON.stringify({ error: 'Title and content are required.' }), { status: 400 });
+        }
+        const safeImageUrl = image_url ?? null;
         await sql`
             INSERT INTO articles (title, content, image_url)
-            VALUES (${title}, ${content}, ${image_url});
+            VALUES (${title}, ${content}, ${safeImageUrl});
         `;
 
-        return new Response(JSON.stringify({ message: 'Article publié avec succès.' }), { status: 200 });
+        return new Response(JSON.stringify({ message: 'Article published successfully.' }), { status: 200 });
     } catch (error) {
+        console.error('❌ Error in POST /api/articles:', error);
         return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 });
     }
 }

@@ -17,7 +17,7 @@ function generateStudentNumber(length: number): string {
 async function seedEleves() {
     await sql`
         CREATE TABLE IF NOT EXISTS eleves (
-            numeroetudiant VARCHAR(8) PRIMARY KEY,
+                                              numeroetudiant VARCHAR(8) PRIMARY KEY,
             nom VARCHAR(255) NOT NULL,
             prenom VARCHAR(255) NOT NULL,
             mail TEXT NOT NULL UNIQUE,
@@ -25,31 +25,32 @@ async function seedEleves() {
             niveau VARCHAR(255) NOT NULL,
             filliere VARCHAR(255) NOT NULL,
             emploi_du_temps TEXT NOT NULL
-        );
+            );
     `;
 
     const insertedEleves = await Promise.all(
         eleves.map(async (eleve) => {
             const hashedPassword = await bcrypt.hash(eleve.mdp, 10);
             return sql`
-                INSERT INTO eleves (numeroetudiant, nom, prenom, mail, mdp, niveau, filliere, emploi_du_temps)
+                INSERT INTO eleves (numeroetudiant, nom, prenom, mail, mdp, niveau, filiere, emploi_du_temps)
                 VALUES (
-                    ${eleve.numeroetudiant ?? generateStudentNumber(8)},
-                    ${eleve.nom ?? ''},
-                    ${eleve.prenom ?? ''},
-                    ${eleve.mail ?? ''},
-                    ${hashedPassword},
-                    ${eleve.niveau ?? ''},
-                    ${eleve.filliere ?? ''},
-                    ${eleve.emploi_du_temps ?? ''}
-                )
-                ON CONFLICT (numeroetudiant) DO NOTHING;
+                           ${eleve.numeroetudiant ?? generateStudentNumber(8)},
+                           ${eleve.nom ?? ''},
+                           ${eleve.prenom ?? ''},
+                           ${eleve.mail ?? ''},
+                           ${hashedPassword},
+                           ${eleve.niveau ?? ''},
+                           ${eleve.filliere ?? ''},
+                           ${eleve.emploi_du_temps ?? ''}
+                       )
+                    ON CONFLICT (numeroetudiant) DO NOTHING;
             `;
         }),
     );
 
     return insertedEleves;
 }
+
 
 async function seedProfs() {
     await sql`

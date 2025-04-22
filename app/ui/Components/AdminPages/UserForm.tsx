@@ -5,7 +5,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
     const [nom, setNom] = useState(user?.nom || "");
     const [prenom, setPrenom] = useState(user?.prenom || "");
     const [mail, setMail] = useState(user?.mail || "");
-    const [password, setPassword] = useState("");  // Ajout du champ mot de passe
+    const [password, setPassword] = useState("");
     const [role, setRole] = useState(user?.role || "Élève");
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
@@ -27,7 +27,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     nom, 
                     prenom, 
                     mail, 
-                    password,  // Envoyer le mot de passe
+                    password,
                     role, 
                     niveau, 
                     filiere, 
@@ -49,7 +49,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                 setNom("");
                 setPrenom("");
                 setMail("");
-                setPassword("");  // Réinitialisation du mot de passe
+                setPassword("");
                 setRole("Élève");
                 setNiveau("L1");
                 setFiliere("Informatique");
@@ -82,7 +82,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
 
                     {role === "Élève" && (
                         <>
-                            <select value={niveau} onChange={(e) => setNiveau(e.target.value)} className="w-full p-2 border rounded">
+                            <select value={niveau} onChange={(e) => setNiveau(e.target.value)}
+                                    className="w-full p-2 border rounded">
                                 <option>L1</option>
                                 <option>L2</option>
                                 <option>L3</option>
@@ -90,22 +91,28 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                                 <option>M2</option>
                             </select>
 
-                            <select value={filiere} onChange={(e) => setFiliere(e.target.value)} className="w-full p-2 border rounded">
-                                <option>Informatique</option>
-                                <option>Électronique</option>
-                                <option>Mathématiques</option>
-                                <option>Physique</option>
+                            <select value={filiere} onChange={(e) => setFiliere(e.target.value)}
+                                    className="w-full p-2 border rounded">
                                 <option>Biologie</option>
+                                <option>Développeur Web</option>
+                                <option>Économie</option>
+                                <option>Ingénierie & Cybersécurité</option>
+                                <option>Ingénierie & Numérique</option>
+                                <option>Management</option>
+                                <option>Mathématique</option>
                             </select>
 
-                            <input type="text" placeholder="Emploi du temps" value={emploiDuTemps} onChange={(e) => setEmploiDuTemps(e.target.value)} className="w-full p-2 border rounded" />
+                            <input type="text" placeholder="Emploi du temps" value={emploiDuTemps}
+                                   onChange={(e) => setEmploiDuTemps(e.target.value)}
+                                   className="w-full p-2 border rounded"/>
                         </>
                     )}
 
                     {error && <p className="text-red-500">{error}</p>}
                     {success && <p className="text-green-500">{success}</p>}
 
-                    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">{user ? "Modifier" : "Ajouter"}</button>
+                    <button type="submit"
+                            className="px-4 py-2 bg-green-600 text-white rounded">{user ? "Modifier" : "Ajouter"}</button>
                     <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
                 </form>
             </div>
