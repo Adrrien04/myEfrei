@@ -1,17 +1,17 @@
 export interface Article {
-    id: number;
-    title: string;
-    content: string;
-    image_url: string;
+  id: number;
+  title: string;
+  content: string;
+  image_url: string;
 }
 
 export const getNews = async (): Promise<Article[]> => {
-    const response = await fetch('/api/articles', { cache: 'no-store' });
+  const response = await fetch("/api/articles", { cache: "no-store" });
 
-    if (!response.ok) {
-        throw new Error('Erreur lors du chargement des articles');
-    }
+  if (!response.ok) {
+    throw new Error("Erreur lors du chargement des articles");
+  }
 
-    const data = await response.json();
-    return data;
+  const data = await response.json();
+  return data;
 };
