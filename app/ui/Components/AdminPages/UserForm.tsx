@@ -10,13 +10,14 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
     const [niveau, setNiveau] = useState(user?.niveau || "L1");
     const [filiere, setFiliere] = useState(user?.filiere || "Informatique");
     const [emploiDuTemps, setEmploiDuTemps] = useState(user?.emploi_du_temps || "");
+    const [matiere, setMatiere] = useState(user?.matiere || ""); // ✅ Ajout de la matière
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, password, role, niveau, filiere, emploiDuTemps });
+        console.log("🟢 Formulaire soumis avec:", { nom, prenom, mail, password, role, niveau, filiere, emploiDuTemps, matiere });
 
         try {
             const response = await fetch("/api/admin/users", {
@@ -31,7 +32,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                     role,
                     niveau,
                     filiere,
-                    emploi_du_temps: emploiDuTemps
+                    emploi_du_temps: emploiDuTemps,
+                    matiere: role === "Professeur" ? matiere : undefined // ✅ Ajout de la matière uniquement pour les professeurs
                 }),
             });
 
@@ -53,7 +55,8 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                 setRole("Élève");
                 setNiveau("L1");
                 setFiliere("Informatique");
-                setEmploiDuTemps("Non défini");
+                setEmploiDuTemps("");
+                setMatiere(""); // ✅ Réinitialisation de la matière
             }
 
         } catch (error) {
@@ -82,8 +85,7 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
 
                     {role === "Élève" && (
                         <>
-                            <select value={niveau} onChange={(e) => setNiveau(e.target.value)}
-                                    className="w-full p-2 border rounded">
+                            <select value={niveau} onChange={(e) => setNiveau(e.target.value)} className="w-full p-2 border rounded">
                                 <option>L1</option>
                                 <option>L2</option>
                                 <option>L3</option>
@@ -91,30 +93,28 @@ const UserForm = ({ user, onClose, onAdd }: { user?: any; onClose: () => void; o
                                 <option>M2</option>
                             </select>
 
-                            <select value={filiere} onChange={(e) => setFiliere(e.target.value)}
-                                    className="w-full p-2 border rounded">
+                            <select value={filiere} onChange={(e) => setFiliere(e.target.value)} className="w-full p-2 border rounded">
+                                <option>Informatique</option>
+                                <option>Électronique</option>
+                                <option>Mathématiques</option>
+                                <option>Physique</option>
                                 <option>Biologie</option>
-                                <option>Développeur Web</option>
-                                <option>Économie</option>
-                                <option>Ingénierie & Cybersécurité</option>
-                                <option>Ingénierie & Numérique</option>
-                                <option>Management</option>
-                                <option>Mathématique</option>
                                 <option>Chimie</option>
-                                <option>Economie</option>
+                                <option>Économie</option>
                             </select>
 
-                            <input type="text" placeholder="Emploi du temps" value={emploiDuTemps}
-                                   onChange={(e) => setEmploiDuTemps(e.target.value)}
-                                   className="w-full p-2 border rounded"/>
+                            <input type="text" placeholder="Emploi du temps" value={emploiDuTemps} onChange={(e) => setEmploiDuTemps(e.target.value)} className="w-full p-2 border rounded" />
                         </>
+                    )}
+
+                    {role === "Professeur" && (
+                        <input type="text" placeholder="Matière enseignée" value={matiere} onChange={(e) => setMatiere(e.target.value)} className="w-full p-2 border rounded" required />
                     )}
 
                     {error && <p className="text-red-500">{error}</p>}
                     {success && <p className="text-green-500">{success}</p>}
 
-                    <button type="submit"
-                            className="px-4 py-2 bg-green-600 text-white rounded">{user ? "Modifier" : "Ajouter"}</button>
+                    <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">{user ? "Modifier" : "Ajouter"}</button>
                     <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
                 </form>
             </div>
