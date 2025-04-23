@@ -66,3 +66,65 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+
+export async function PUT(req: NextRequest) {
+  try {
+    const { id_etudiant, jour, heure, newJour, newHeure } = await req.json();
+
+    if (!id_etudiant || !jour || !heure || !newJour || !newHeure) {
+      return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
+    }
+
+    const [student] = await sql`
+      SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${id_etudiant}
+    `;
+
+    const emploi = student?.emploi_du_temps ?? [];
+
+    const updated = emploi.map((item: any) => {
+      if (item.jour === jour && item.heure === heure) {
+        return { ...item, jour: newJour, heure: newHeure };
+      }
+      return item;
+    });
+
+    await sql`
+      UPDATE eleves SET emploi_du_temps = ${updated} WHERE numeroetudiant = ${id_etudiant}
+    `;
+
+    return NextResponse.json({ message: "Cours déplacé avec succès" });
+  } catch (error) {
+    console.error("❌ Erreur PUT /api/admin/attributions :", error);
+    return NextResponse.json({ error: "Erreur lors de la modification" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { id_etudiant, jour, heure } = await req.json();
+
+    if (!id_etudiant || !jour || !heure) {
+      return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
+    }
+
+    const [student] = await sql`
+      SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${id_etudiant}
+    `;
+
+    const emploi = student?.emploi_du_temps ?? [];
+
+    const updated = emploi.filter(
+      (item: any) => item.jour !== jour || item.heure !== heure
+    );
+
+    await sql`
+      UPDATE eleves SET emploi_du_temps = ${updated} WHERE numeroetudiant = ${id_etudiant}
+    `;
+
+    return NextResponse.json({ message: "Cours supprimé avec succès" });
+  } catch (error) {
+    console.error("❌ Erreur DELETE /api/admin/attributions :", error);
+    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
+  }
+}

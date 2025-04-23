@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import AssignCourse from "./AssignCourse";
+import ManageScheduleByClasse from "./ManageScheduleByClassePage";
 
 const AdminCoursPage = () => {
   const [cours, setCours] = useState<
@@ -204,6 +205,7 @@ const AdminCoursPage = () => {
           </table>
         </div>
       </div>
+      <ManageScheduleByClasse />
       <div className="mb-6"></div>
       <AssignCourse></AssignCourse>
 
