@@ -81,7 +81,7 @@ const AdminDashboardPage = () => {
           📚 Gérer les cours
         </a>
         <a
-          href="/portal/admin/events"
+          href="/portal/admin/events/view"
           className="bg-red-500 text-white text-center p-4 rounded-lg hover:bg-red-600 transition"
         >
           📅 Gérer les événements
