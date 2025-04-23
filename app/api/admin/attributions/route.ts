@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     const [student] = await sql`
-      SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${id_etudiant}
+      SELECT emploi_du_temps, niveau, filiere FROM eleves WHERE numeroetudiant = ${id_etudiant}
     `;
 
     const emploiDuTemps = student?.emploi_du_temps ?? [];
@@ -54,6 +54,28 @@ export async function POST(req: NextRequest) {
 
     await sql`
       UPDATE eleves SET emploi_du_temps = ${updatedSchedule} WHERE numeroetudiant = ${id_etudiant}
+    `;
+
+    // 🔁 Mise à jour emploi du temps du professeur
+    const [prof] = await sql`
+      SELECT emploi_du_temps FROM profs WHERE id = (
+        SELECT id_prof FROM cours WHERE id = ${id_cours}
+      )
+    `;
+
+    const updatedProfSchedule = prof?.emploi_du_temps ?? [];
+    updatedProfSchedule.push({
+      jour,
+      heure: horaire,
+      cours: cours.cours_nom,
+      groupe: `${student.niveau} ${student.filiere}`,
+    });
+
+    await sql`
+      UPDATE profs SET emploi_du_temps = ${updatedProfSchedule}
+      WHERE id = (
+        SELECT id_prof FROM cours WHERE id = ${id_cours}
+      )
     `;
 
     console.log("✅ Attribution enregistrée et emploi du temps mis à jour !");

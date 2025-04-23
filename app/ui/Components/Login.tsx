@@ -34,7 +34,7 @@ const Login = () => {
           router.push("/portal/admin");
           break;
         case "profs":
-          router.push("/portal/teacher");
+          router.push("/portal/profs");
           break;
         case "eleves":
           router.push("/portal/student");

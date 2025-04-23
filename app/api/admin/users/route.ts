@@ -12,12 +12,12 @@ export async function GET() {
 
     const students =
       await sql`SELECT numeroetudiant AS id, nom, prenom, mail, niveau, 'Élève' AS role FROM eleves`;
-    const teachers =
+    const profs =
       await sql`SELECT id, nom, prenom, mail, matiere, 'Professeur' AS role FROM profs`;
     const admins =
       await sql`SELECT id, nom, prenom, mail, 'Admin' AS role FROM admins`;
 
-    const users = [...students, ...teachers, ...admins];
+    const users = [...students, ...profs, ...admins];
 
     return NextResponse.json(users);
   } catch (error) {

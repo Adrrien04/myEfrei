@@ -176,12 +176,12 @@ const ProfSubNavbar = () => (
     <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">
       <ul className="flex space-x-4">
         <li>
-          <a href="/portal/teacher/courses" className="hover:underline">
+          <a href="/portal/profs/courses" className="hover:underline">
             My Courses
           </a>
         </li>
         <li>
-          <a href="/portal/teacher/schedule" className="hover:underline">
+          <a href="/portal/profs/schedule" className="hover:underline">
             Schedule
           </a>
         </li>

@@ -8,19 +8,19 @@ const supabase = createClient(
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const numeroEtudiant = searchParams.get("numeroetudiant");
+  const idProf = searchParams.get("id");
 
-  if (!numeroEtudiant) {
+  if (!idProf) {
     return NextResponse.json(
-      { error: "Numéro étudiant manquant" },
+      { error: "ID professeur manquant" },
       { status: 400 },
     );
   }
 
   const { data, error } = await supabase
-    .from("eleves")
+    .from("profs")
     .select("emploi_du_temps")
-    .eq("numeroetudiant", numeroEtudiant)
+    .eq("id", idProf)
     .single();
 
   if (error || !data?.emploi_du_temps) {
@@ -30,7 +30,5 @@ export async function GET(req: Request) {
     );
   }
 
-  return NextResponse.json({
-    emploi_du_temps: Array.isArray(data.emploi_du_temps) ? data.emploi_du_temps : [],
-  });
+  return NextResponse.json({ emploi_du_temps: data.emploi_du_temps });
 }

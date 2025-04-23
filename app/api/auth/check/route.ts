@@ -31,17 +31,32 @@ export async function GET(req: NextRequest) {
             `;
       console.log("Résultat SQL - emploi du temps récupéré :", student);
       emploiDuTemps = student?.emploi_du_temps ?? "Aucun cours prévu";
+
+      return NextResponse.json({
+        authenticated: true,
+        email: decoded.email,
+        name: decoded.name,
+        surname: decoded.surname,
+        role: decoded.role,
+        numeroetudiant: decoded.numeroetudiant || null,
+        emploi_du_temps: emploiDuTemps,
+      });
     }
 
-    return NextResponse.json({
-      authenticated: true,
-      email: decoded.email,
-      name: decoded.name,
-      surname: decoded.surname,
-      role: decoded.role,
-      numeroetudiant: decoded.numeroetudiant || null,
-      emploi_du_temps: emploiDuTemps,
-    });
+    if (decoded.role === "profs") {
+      const [prof] = await sql`
+        SELECT id FROM profs WHERE mail = ${decoded.email}
+      `;
+      return NextResponse.json({
+        authenticated: true,
+        email: decoded.email,
+        name: decoded.name,
+        surname: decoded.surname,
+        role: decoded.role,
+        id: prof?.id || null,
+      });
+    }
+
   } catch (error) {
     console.log("Token invalide :", error);
     return NextResponse.json({ authenticated: false }, { status: 401 });
