@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 import EfreiLogo from "@/app/ui/efrei-logo";
 
 export default function Navbar() {
@@ -45,10 +46,8 @@ export default function Navbar() {
     <nav className="bg-blue-500 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <Link href="/portal/common" legacyBehavior>
-            <div className="w-32 text-white md:w-40 cursor-pointer">
-              <EfreiLogo />
-            </div>
+          <Link href="/portal/common" className="w-32 text-white md:w-40 cursor-pointer">
+            <EfreiLogo />
           </Link>
 
           {role && (
@@ -66,8 +65,8 @@ export default function Navbar() {
         <div className="flex space-x-4 items-center">
           {user && (
             <>
-              <Link href="/dashboard" legacyBehavior>
-                <a className="text-white text-lg font-medium hover:underline">{`${user.surname} ${user.name.toUpperCase()}`}</a>
+              <Link href="/dashboard" className="text-white text-lg font-medium hover:underline">
+                {`${user.surname} ${user.name.toUpperCase()}`}
               </Link>
               <button
                 onClick={handleSignOut}
