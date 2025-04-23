@@ -36,7 +36,7 @@ const SchedulePage = () => {
         );
 
         const scheduleData = await scheduleResponse.json();
-        console.log("⏳ contenu brut emploi_du_temps :", scheduleData.emploi_du_temps);
+        
 
         if (!scheduleResponse.ok || !scheduleData.emploi_du_temps) {
           throw new Error("Aucun emploi du temps trouvé");

@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     console.log("Token décodé :", decoded);
 
     let emploiDuTemps = null;
-    if (decoded.role === "eleve") {
+    if (decoded.role === "eleves") {
       const [student] = await sql`
                 SELECT emploi_du_temps FROM eleves WHERE numeroetudiant = ${decoded.numeroetudiant}
             `;
@@ -56,6 +56,11 @@ export async function GET(req: NextRequest) {
         id: prof?.id || null,
       });
     }
+
+    return NextResponse.json(
+      { authenticated: false, error: "Rôle non reconnu" },
+      { status: 401 }
+    );
 
   } catch (error) {
     console.log("Token invalide :", error);

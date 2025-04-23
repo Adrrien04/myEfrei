@@ -46,7 +46,9 @@ export default function Navbar() {
     <nav className="bg-blue-500 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <Link href="/portal/common" className="w-32 text-white md:w-40 cursor-pointer">
+          <Link
+            href="/portal/common"
+            className="w-32 text-white md:w-40 cursor-pointer">
             <EfreiLogo />
           </Link>
 
@@ -65,7 +67,9 @@ export default function Navbar() {
         <div className="flex space-x-4 items-center">
           {user && (
             <>
-              <Link href="/dashboard" className="text-white text-lg font-medium hover:underline">
+              <Link
+                href="/dashboard"
+                className="text-white text-lg font-medium hover:underline">
                 {`${user.surname} ${user.name.toUpperCase()}`}
               </Link>
               <button
