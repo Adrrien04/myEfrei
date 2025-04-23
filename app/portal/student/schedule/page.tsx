@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 const SchedulePage = () => {
   const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
   const heures = ["08h-10h", "10h-12h", "12h-14h", "14h-16h", "16h-18h"];
-  const [schedule, setSchedule] = useState<
-    Record<string, Record<string, string>>
-  >({});
+  const [schedule, setSchedule] = useState<Record<string, Record<string, string>>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,8 +12,7 @@ const SchedulePage = () => {
     const fetchSchedule = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token)
-          throw new Error("Utilisateur non connecté (token manquant)");
+        if (!token) throw new Error("Utilisateur non connecté (token manquant)");
 
         const response = await fetch("/api/auth/check", {
           headers: {
@@ -39,35 +36,20 @@ const SchedulePage = () => {
         );
 
         const scheduleData = await scheduleResponse.json();
-        console.log(
-          "⏳ contenu brut emploi_du_temps :",
-          scheduleData.emploi_du_temps,
-        );
+        console.log("⏳ contenu brut emploi_du_temps :", scheduleData.emploi_du_temps);
+
         if (!scheduleResponse.ok || !scheduleData.emploi_du_temps) {
           throw new Error("Aucun emploi du temps trouvé");
         }
 
         const parsedSchedule: Record<string, Record<string, string>> = {};
 
-        scheduleData.emploi_du_temps.split("\n").forEach((entry: string) => {
-          const parts = entry.split("|").map((p) => p.trim());
-          if (parts.length < 3) return;
-
-          const [jour, heure, ...coursParts] = parts;
-          const cours = coursParts.join(" | ");
-
-          if (!parsedSchedule[jour]) {
-            parsedSchedule[jour] = {};
-          }
-          if (cours.includes("|")) {
-            const [nomCours, professeur] = cours
-              .split("|")
-              .map((p) => p.trim());
-            parsedSchedule[jour][heure] =
-              `${nomCours}<br/><span class='text-sm text-gray-500'> Professeur : ${professeur}</span>`;
-          } else {
-            parsedSchedule[jour][heure] = cours;
-          }
+        (scheduleData.emploi_du_temps ?? []).forEach((entry: any) => {
+          const { jour, heure, cours, prof } = entry;
+          if (!parsedSchedule[jour]) parsedSchedule[jour] = {};
+          parsedSchedule[jour][heure] = prof
+            ? `${cours}<br/><span class='text-sm text-gray-500'>Professeur : ${prof}</span>`
+            : cours;
         });
 
         setSchedule(parsedSchedule);

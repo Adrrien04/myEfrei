@@ -29,12 +29,12 @@ export async function GET() {
   }
 }
 
-// ✅ Génération d'un ID unique pour les professeurs (ex: "P123456")
+// ID unique pour les professeurs (ex: "P123456")
 function generateProfessorId(): string {
   return "P" + Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// ✅ Génération d'un ID unique pour les admins (ex: "A123456")
+// ID unique pour les admins (ex: "A123456")
 function generateAdminId(): string {
   return "A" + Math.floor(100000 + Math.random() * 900000).toString();
 }
