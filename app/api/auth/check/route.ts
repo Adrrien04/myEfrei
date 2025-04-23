@@ -57,6 +57,16 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    if (decoded.role === "admins") {
+      return NextResponse.json({
+        authenticated: true,
+        email: decoded.email,
+        name: decoded.name,
+        surname: decoded.surname,
+        role: decoded.role,
+      });
+    }
+
     return NextResponse.json(
       { authenticated: false, error: "Rôle non reconnu" },
       { status: 401 }
