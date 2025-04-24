@@ -85,6 +85,6 @@ pnpm dev
 
 🧑‍💻 Auteur
 
-Développé par Oumou et Adrrien dans le cadre d’un projet web à l’Efrei.
+Développé par Oumou (https://github.com/fluffykoo) et Adrrien (https://github.com/Adrrien04) dans le cadre d’un projet web à l’Efrei.
 
 ⸻
