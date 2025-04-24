@@ -67,9 +67,18 @@ Le backend est intégré au projet grâce aux routes API de Next.js (`app/api/`)
 
 ## 🗄️ Base de données
 
-- **PostgreSQL**
-- Connexion via `process.env.POSTGRES_URL`
-- Tables : `cours`, `articles`, `events`, `slides`, `users`, etc.
+- Base de données gérée avec **Supabase** (PostgreSQL)
+- Connexion via l’URL fournie dans `process.env.POSTGRES_URL`
+
+### Tables principales
+
+- `admins`
+- `profs`
+- `eleves`
+- `cours`
+- `articles`
+- `events`
+- `slides`
 
 ---
 
