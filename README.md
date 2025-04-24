@@ -78,9 +78,9 @@ Le backend est intégré au projet grâce aux routes API de Next.js (`app/api/`)
 ```bash
 pnpm install
 pnpm dev
+```
 
-
-
+---
 ⸻
 
 🧑‍💻 Auteur
@@ -88,5 +88,3 @@ pnpm dev
 Développé par Oumou et Adrrien dans le cadre d’un projet web à l’Efrei.
 
 ⸻
-
-
