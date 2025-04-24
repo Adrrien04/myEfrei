@@ -50,7 +50,7 @@ const SchedulePageProf = () => {
 
         setSchedule(parsedSchedule);
       } catch (error: any) {
-        console.error("❌ Erreur emploi du temps prof :", error);
+        console.error(" Erreur emploi du temps prof :", error);
         setError("Erreur lors de la récupération de l'emploi du temps.");
       } finally {
         setLoading(false);

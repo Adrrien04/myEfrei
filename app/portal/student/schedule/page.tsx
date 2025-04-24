@@ -54,7 +54,7 @@ const SchedulePage = () => {
 
         setSchedule(parsedSchedule);
       } catch (error) {
-        console.error("❌ Erreur récupération emploi du temps :", error);
+        console.error(" Erreur récupération emploi du temps :", error);
         setError("Erreur lors de la récupération de l'emploi du temps.");
       } finally {
         setLoading(false);

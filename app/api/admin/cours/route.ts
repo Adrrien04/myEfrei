@@ -5,7 +5,7 @@ const sql = postgres(process.env.POSTGRES_URL!, {
   ssl: { rejectUnauthorized: false },
 });
 
-// ✅ Générer un ID fixe de 8 caractères (ex: "C3F8X9Y2")
+// Génération d'un ID fixe de 8 caractères (ex: "C3F8X9Y2")
 function generateCourseId(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let id = "C";
@@ -15,7 +15,7 @@ function generateCourseId(): string {
   return id;
 }
 
-// ✅ Récupérer tous les cours
+// Récupérer tous les cours
 export async function GET() {
   try {
     const cours = await sql`
@@ -25,12 +25,12 @@ export async function GET() {
     `;
     return NextResponse.json(cours);
   } catch (error) {
-    console.error("❌ GET /cours :", error);
+    console.error(" GET /cours :", error);
     return NextResponse.json({ error: "Erreur lors de la récupération des cours" }, { status: 500 });
   }
 }
 
-// ✅ Ajouter un cours
+// Ajouter un cours
 export async function POST(req: Request) {
   try {
     const { nom, id_prof, matiere } = await req.json();
@@ -54,12 +54,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newCourse);
   } catch (error) {
-    console.error("❌ POST /cours :", error);
+    console.error(" POST /cours :", error);
     return NextResponse.json({ error: "Erreur lors de l'ajout du cours" }, { status: 500 });
   }
 }
 
-// ✅ Modifier un cours
+// Modifier un cours
 export async function PUT(req: Request) {
   try {
     const { id, nom, id_prof, matiere } = await req.json();
@@ -80,12 +80,12 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ message: "Cours mis à jour" });
   } catch (error) {
-    console.error("❌ PUT /cours :", error);
+    console.error(" PUT /cours :", error);
     return NextResponse.json({ error: "Erreur lors de la mise à jour du cours" }, { status: 500 });
   }
 }
 
-// ✅ Supprimer un cours
+// Supprimer un cours
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
@@ -97,7 +97,7 @@ export async function DELETE(req: Request) {
     await sql`DELETE FROM cours WHERE id = ${id}`;
     return NextResponse.json({ message: "Cours supprimé" });
   } catch (error) {
-    console.error("❌ DELETE /cours :", error);
+    console.error(" DELETE /cours :", error);
     return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
   }
 }

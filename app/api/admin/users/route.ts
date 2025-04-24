@@ -8,7 +8,7 @@ const sql = postgres(process.env.POSTGRES_URL!, {
 
 export async function GET() {
   try {
-    console.log("🟢 GET /api/admin/users - Récupération des utilisateurs");
+    console.log(" GET /api/admin/users - Récupération des utilisateurs");
 
     const students =
       await sql`SELECT numeroetudiant AS id, nom, prenom, mail, niveau, 'Élève' AS role FROM eleves`;
@@ -21,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json(users);
   } catch (error) {
-    console.error("❌ Erreur GET /api/admin/users:", error);
+    console.error(" Erreur GET /api/admin/users:", error);
     return NextResponse.json(
       { error: "Erreur lors de la récupération des utilisateurs" },
       { status: 500 },
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       emploi_du_temps,
       matiere,
     } = await req.json();
-    console.log("🟢 POST /api/admin/users - Données reçues:", {
+    console.log("POST /api/admin/users - Données reçues:", {
       nom,
       prenom,
       mail,
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       }
 
       const professorId = generateProfessorId();
-      console.log("✅ ID Professeur généré :", professorId);
+      console.log("ID Professeur généré :", professorId);
 
       query = sql`
                 INSERT INTO profs (id, nom, prenom, mail, mdp, matiere)
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
             `;
     } else if (role === "Admin") {
       const adminId = generateAdminId();
-      console.log("✅ ID Admin généré :", adminId);
+      console.log("ID Admin généré :", adminId);
 
       query = sql`
                 INSERT INTO admins (id, nom, prenom, mail, mdp)
@@ -110,10 +110,10 @@ export async function POST(req: Request) {
     }
 
     const [newUser] = await query;
-    console.log("✅ Utilisateur ajouté avec succès :", newUser);
+    console.log("Utilisateur ajouté avec succès :", newUser);
     return NextResponse.json(newUser);
   } catch (error) {
-    console.error("❌ Erreur POST /api/admin/users:", error);
+    console.error(" Erreur POST /api/admin/users:", error);
     return NextResponse.json(
       { error: "Erreur lors de l'ajout de l'utilisateur" },
       { status: 500 },
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { id, role } = await req.json();
-    console.log("🟢 DELETE /api/admin/users - Données reçues:", { id, role });
+    console.log(" DELETE /api/admin/users - Données reçues:", { id, role });
 
     if (!id || !role) {
       console.log("⚠️ Données invalides");
@@ -143,10 +143,10 @@ export async function DELETE(req: Request) {
     }
 
     await query;
-    console.log("✅ Utilisateur supprimé :", { id, role });
+    console.log("Utilisateur supprimé :", { id, role });
     return NextResponse.json({ message: "Utilisateur supprimé avec succès" });
   } catch (error) {
-    console.error("❌ Erreur DELETE /api/admin/users:", error);
+    console.error(" Erreur DELETE /api/admin/users:", error);
     return NextResponse.json(
       { error: "Erreur lors de la suppression de l'utilisateur" },
       { status: 500 },

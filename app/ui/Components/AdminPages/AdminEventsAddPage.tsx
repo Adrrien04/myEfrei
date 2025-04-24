@@ -23,14 +23,14 @@ export default function AdminAddEventPage() {
         const data = await res.json();
 
         if (res.ok) {
-            setMessage("✅ Événement ajouté !");
+            setMessage("Événement ajouté !");
             setTitle("");
             setDate("");
             setTime("");
             setDescription("");
             setLocation("");
         } else {
-            setMessage(`❌ Erreur : ${data.error}`);
+            setMessage(` Erreur : ${data.error}`);
         }
     };
 

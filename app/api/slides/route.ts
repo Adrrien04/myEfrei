@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("❌ Error in POST /api/slides:", error);
+    console.error(" Error in POST /api/slides:", error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
     });

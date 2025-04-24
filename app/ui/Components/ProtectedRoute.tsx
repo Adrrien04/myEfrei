@@ -12,7 +12,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.log("Aucun token trouvé, redirection vers login");
         router.push("/login");
         return;
       }
@@ -26,10 +25,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         });
 
         if (response.ok) {
-          console.log("Token valide");
           setIsAuthenticated(true);
         } else {
-          console.log("Token invalide, redirection vers login");
           localStorage.removeItem("token");
           router.push("/login");
         }

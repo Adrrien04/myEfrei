@@ -57,7 +57,7 @@ const AssignCourse = () => {
       const etudiants = await responseEtudiants.json();
 
       if (!Array.isArray(etudiants) || etudiants.length === 0) {
-        setMessage("❌ Aucun étudiant trouvé pour cette filière et ce niveau.");
+        setMessage(" Aucun étudiant trouvé pour cette filière et ce niveau.");
         return;
       }
 
@@ -74,15 +74,15 @@ const AssignCourse = () => {
         });
       }
 
-      setMessage("✅ Attribution réussie !");
+      setMessage("Attribution réussie !");
       setSelectedFiliere("");
       setSelectedNiveau("");
       setSelectedCours("");
       setSelectedJour("");
       setSelectedHoraire("");
     } catch (error) {
-      console.error("❌ Erreur lors de l'attribution :", error);
-      setMessage("❌ Erreur lors de l'attribution.");
+      console.error(" Erreur lors de l'attribution :", error);
+      setMessage(" Erreur lors de l'attribution.");
     }
   };
 

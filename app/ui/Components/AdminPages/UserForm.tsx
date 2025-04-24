@@ -20,14 +20,14 @@ const UserForm = ({
   const [emploiDuTemps, setEmploiDuTemps] = useState(
     user?.emploi_du_temps || "",
   );
-  const [matiere, setMatiere] = useState(user?.matiere || ""); // ✅ Ajout de la matière
+  const [matiere, setMatiere] = useState(user?.matiere || ""); // Ajout de la matière
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("🟢 Formulaire soumis avec:", {
+    console.log("Formulaire soumis avec:", {
       nom,
       prenom,
       mail,
@@ -53,7 +53,7 @@ const UserForm = ({
           niveau,
           filiere,
           emploi_du_temps: emploiDuTemps,
-          matiere: role === "Professeur" ? matiere : undefined, // ✅ Ajout de la matière uniquement pour les professeurs
+          matiere: role === "Professeur" ? matiere : undefined, // Ajout de la matière uniquement pour les professeurs
         }),
       });
 
@@ -80,10 +80,10 @@ const UserForm = ({
         setNiveau("L1");
         setFiliere("Informatique");
         setEmploiDuTemps("");
-        setMatiere(""); // ✅ Réinitialisation de la matière
+        setMatiere(""); // Réinitialisation de la matière
       }
     } catch (error) {
-      console.error("❌ Erreur:", error);
+      console.error(" Erreur:", error);
       setError("Erreur de connexion au serveur.");
     }
   };

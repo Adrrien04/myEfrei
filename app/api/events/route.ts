@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         return new Response(JSON.stringify({ message: "Event published successfully." }), { status: 200 });
 
     } catch (error) {
-        console.error("❌ Error in POST /api/events:", error);
+        console.error(" Error in POST /api/events:", error);
         return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 });
     }
 }

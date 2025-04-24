@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    console.error("❌ Erreur lors de la connexion :", error);
+    console.error(" Erreur lors de la connexion :", error);
     return new Response(JSON.stringify({ error: "Erreur serveur" }), {
       status: 500,
     });

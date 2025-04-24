@@ -8,12 +8,6 @@ const sql = postgres(process.env.POSTGRES_URL!, {
 export async function POST(req: NextRequest) {
   try {
     const { id_cours, id_etudiant, jour, horaire } = await req.json();
-    console.log("🟢 POST /api/admin/attributions - Données reçues:", {
-      id_cours,
-      id_etudiant,
-      jour,
-      horaire,
-    });
 
     if (!id_cours || !id_etudiant || !jour || !horaire) {
       return NextResponse.json(
@@ -56,7 +50,7 @@ export async function POST(req: NextRequest) {
       UPDATE eleves SET emploi_du_temps = ${updatedSchedule} WHERE numeroetudiant = ${id_etudiant}
     `;
 
-    // 🔁 Mise à jour emploi du temps du professeur
+    // Mise à jour emploi du temps du professeur
     const [prof] = await sql`
       SELECT emploi_du_temps FROM profs WHERE id = (
         SELECT id_prof FROM cours WHERE id = ${id_cours}
@@ -78,10 +72,9 @@ export async function POST(req: NextRequest) {
       )
     `;
 
-    console.log("✅ Attribution enregistrée et emploi du temps mis à jour !");
     return NextResponse.json({ message: "Attribution réussie !" });
   } catch (error) {
-    console.error("❌ Erreur POST /api/admin/attributions :", error);
+    console.error(" Erreur POST /api/admin/attributions :", error);
     return NextResponse.json(
       { error: "Erreur lors de l'attribution" },
       { status: 500 }
@@ -117,7 +110,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ message: "Cours déplacé avec succès" });
   } catch (error) {
-    console.error("❌ Erreur PUT /api/admin/attributions :", error);
+    console.error(" Erreur PUT /api/admin/attributions :", error);
     return NextResponse.json({ error: "Erreur lors de la modification" }, { status: 500 });
   }
 }
@@ -146,7 +139,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: "Cours supprimé avec succès" });
   } catch (error) {
-    console.error("❌ Erreur DELETE /api/admin/attributions :", error);
+    console.error(" Erreur DELETE /api/admin/attributions :", error);
     return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
   }
 }

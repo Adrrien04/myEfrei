@@ -58,14 +58,14 @@ const AdminCoursPage = () => {
     });
 
     if (response.ok) {
-      setMessage("✅ Cours ajouté !");
+      setMessage("Cours ajouté !");
       setNomCours("");
       setIdProf("");
       setMatiere("");
       setShowModal(false);
       fetchCours();
     } else {
-      setMessage("❌ Erreur lors de l'ajout");
+      setMessage(" Erreur lors de l'ajout");
     }
   };
 
@@ -95,12 +95,12 @@ const AdminCoursPage = () => {
         throw new Error("Échec de la mise à jour");
       }
 
-      setMessage("✅ Cours mis à jour !");
+      setMessage("Cours mis à jour !");
       setShowModal(false);
       setEditingCours(null);
       fetchCours();
     } catch (error) {
-      setMessage("❌ Erreur lors de la mise à jour");
+      setMessage(" Erreur lors de la mise à jour");
     }
   };
 
@@ -118,10 +118,10 @@ const AdminCoursPage = () => {
         throw new Error("Échec de la suppression");
       }
 
-      setMessage("✅ Cours supprimé !");
+      setMessage("Cours supprimé !");
       fetchCours();
     } catch (error) {
-      setMessage("❌ Erreur lors de la suppression");
+      setMessage(" Erreur lors de la suppression");
     }
   };
 

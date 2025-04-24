@@ -6,12 +6,12 @@ const sql = postgres(process.env.POSTGRES_URL!, {
 });
 
 /**
- * ✅ GET: Récupérer toutes les filières distinctes
+ * GET: Récupérer toutes les filières distinctes
  */
 export async function GET() {
   try {
     console.log(
-      "🟢 GET /api/admin/filieres - Récupération des filières distinctes",
+      "GET /api/admin/filieres - Récupération des filières distinctes",
     );
 
     const filieres = await sql`
@@ -20,7 +20,7 @@ export async function GET() {
 
     return NextResponse.json(filieres.map((f) => f.filiere));
   } catch (error) {
-    console.error("❌ Erreur GET /api/admin/filieres :", error);
+    console.error(" Erreur GET /api/admin/filieres :", error);
     return NextResponse.json(
       { error: "Erreur lors de la récupération des filières" },
       { status: 500 },

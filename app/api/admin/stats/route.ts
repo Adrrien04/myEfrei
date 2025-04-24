@@ -17,7 +17,7 @@ export async function GET() {
       events: parseInt(eventCount[0]?.count) || 0,
     });
   } catch (error) {
-    console.error("❌ ERREUR SQL :", error);
+    console.error(" ERREUR SQL :", error);
     return NextResponse.json(
       { error: "Erreur lors de la récupération des stats" },
       { status: 500 },

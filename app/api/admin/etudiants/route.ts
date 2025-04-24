@@ -11,9 +11,6 @@ export async function GET(req: Request) {
     let filiere = searchParams.get("filiere");
     const niveau = searchParams.get("niveau");
 
-    console.log("🟢 GET /api/admin/etudiants - Requête reçue:");
-    console.log("   📌 Filière:", filiere);
-    console.log("   📌 Niveau:", niveau);
 
     if (!filiere || !niveau) {
       return NextResponse.json(
@@ -23,12 +20,7 @@ export async function GET(req: Request) {
     }
 
     filiere = filiere.replace("%20", " ").replace("&", "AND");
-    console.log(
-      "🔍 Recherche des étudiants avec filière:",
-      filiere,
-      "et niveau:",
-      niveau,
-    );
+    console.log("Recherche des étudiants avec filière:", filiere, "et niveau:", niveau);
 
     const etudiants = await sql`
             SELECT id, numeroetudiant, nom, prenom, filiere, niveau 
@@ -37,11 +29,11 @@ export async function GET(req: Request) {
             AND niveau = ${niveau}
         `;
 
-    console.log("✅ Étudiants trouvés:", etudiants.length);
+    console.log("Nombre d'étudiants trouvés:", etudiants.length);
 
     return NextResponse.json(etudiants);
   } catch (error) {
-    console.error("❌ Erreur GET /api/admin/etudiants :", error);
+    console.error(" Erreur GET /api/admin/etudiants :", error);
     return NextResponse.json(
       { error: "Erreur lors de la récupération des étudiants." },
       { status: 500 },

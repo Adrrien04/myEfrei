@@ -138,12 +138,12 @@ const AdminUsersPage = () => {
   };
 
   const handleAddUser = async (newUser: any) => {
-    const id = generateShortId(); // Générer un ID
+    const id = generateShortId(); 
     try {
       const response = await fetch("/api/admin/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...newUser, id }), // Ajouter l'ID manuellement
+        body: JSON.stringify({ ...newUser, id }), 
       });
 
       if (!response.ok) {
