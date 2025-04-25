@@ -1,22 +1,30 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { classe: string } },
+    req: NextRequest,
+    context: { params: { classe: string } },
 ) {
-  const { classe } = params;
+  const { classe } = context.params;
 
   const [niveau, ...filiereParts] = decodeURIComponent(classe).split(" ");
   const filiere = filiereParts.join(" ");
 
-  const eleves = await sql`
-    SELECT id, nom, prenom, niveau, filiere
-    FROM eleves
-    WHERE niveau = ${niveau} AND filiere = ${filiere}
-`;
+  try {
+    const eleves = await sql`
+      SELECT id, nom, prenom, niveau, filiere
+      FROM eleves
+      WHERE niveau = ${niveau} AND filiere = ${filiere}
+    `;
 
-  return new Response(JSON.stringify(eleves), { status: 200 });
+    return NextResponse.json(eleves, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    return NextResponse.json(
+        { error: "Error fetching students" },
+        { status: 500 }
+    );
+  }
 }
