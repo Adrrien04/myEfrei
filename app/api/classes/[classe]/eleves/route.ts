@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import postgres from "postgres";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+if (!process.env.POSTGRES_URL) {
+  throw new Error("POSTGRES_URL environment variable is not defined.");
+}
 
-export async function GET(
-    req: NextRequest,
-    context: { params: { classe: string } },
-) {
+const sql = postgres(process.env.POSTGRES_URL, { ssl: "require" });
+
+export async function GET(req: NextRequest, context: { params: { classe: string } }) {
   const { classe } = context.params;
 
   const [niveau, ...filiereParts] = decodeURIComponent(classe).split(" ");
@@ -18,13 +19,9 @@ export async function GET(
       FROM eleves
       WHERE niveau = ${niveau} AND filiere = ${filiere}
     `;
-
-    return NextResponse.json(eleves, { status: 200 });
+    return new Response(JSON.stringify(eleves), { status: 200 });
   } catch (error) {
-    console.error("Error fetching students:", error);
-    return NextResponse.json(
-        { error: "Error fetching students" },
-        { status: 500 }
-    );
+    console.error("Erreur dans la requête SQL :", error);
+    return new Response("Erreur interne au serveur", { status: 500 });
   }
 }
