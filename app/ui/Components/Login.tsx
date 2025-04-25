@@ -66,7 +66,7 @@ const Login = () => {
       {errorMessage && <p className="text-red-600 text-sm">{errorMessage}</p>}
       <button
         type="submit"
-        className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+        className="w-full px-4 py-2 text-white bg-[#1F3666]  rounded-lg hover:bg-blue-900"
       >
         Se connecter
       </button>

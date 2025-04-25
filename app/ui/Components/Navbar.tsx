@@ -43,45 +43,45 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/portal/common"
-            className="w-32 text-white md:w-40 cursor-pointer">
-            <EfreiLogo />
-          </Link>
+      <nav className="bg-[#1F3666] p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <Link
+                href="/portal/common"
+                className="w-32 text-white md:w-40 cursor-pointer">
+              <EfreiLogo/>
+            </Link>
 
-          {role && (
-            <span className="flex items-center text-white text-sm px-3 py-1 border border-orange-500 rounded-full">
+            {role && (
+                <span className="flex items-center text-white text-sm px-3 py-1 border border-orange-500 rounded-full">
               <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-              {role === "admins"
-                ? "Administration"
-                : role === "profs"
-                  ? "Enseignant"
-                  : "Étudiant"}
+                  {role === "admins"
+                      ? "Administration"
+                      : role === "profs"
+                          ? "Enseignant"
+                          : "Étudiant"}
             </span>
-          )}
-        </div>
+            )}
+          </div>
 
-        <div className="flex space-x-4 items-center">
-          {user && (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-white text-lg font-medium hover:underline">
-                {`${user.surname} ${user.name.toUpperCase()}`}
-              </Link>
-              <button
-                onClick={handleSignOut}
-                className="text-white text-sm bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600"
-              >
-                Sign Out
-              </button>
-            </>
-          )}
+          <div className="flex space-x-4 items-center">
+            {user && (
+                <>
+                  <Link
+                      href="/dashboard"
+                      className="text-white text-lg font-medium hover:underline">
+                    {`${user.surname} ${user.name.toUpperCase()}`}
+                  </Link>
+                  <button
+                      onClick={handleSignOut}
+                      className="text-white text-sm bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600"
+                  >
+                    Sign Out
+                  </button>
+                </>
+            )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
   );
 }
