@@ -87,10 +87,10 @@ const AdminDashboardPage = () => {
           📅 Gérer les événements
         </a>
         <a
-          href="/portal/admin/logs"
+          href="/portal/admin/slides/view"
           className="bg-gray-500 text-white text-center p-4 rounded-lg hover:bg-gray-600 transition"
         >
-          🔔 Voir les logs
+          🖼️ Gérer les slides
         </a>
       </div>
 
