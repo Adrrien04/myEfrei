@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import postgres from "postgres";
 import bcrypt from "bcryptjs";
 
-const sql = postgres(process.env.POSTGRES_URL!, { 
+const sql = postgres(process.env.POSTGRES_URL!, {
   ssl: { rejectUnauthorized: false },
 });
 
@@ -11,7 +11,7 @@ export async function GET() {
     console.log(" GET /api/admin/users - Récupération des utilisateurs");
 
     const students =
-      await sql`SELECT numeroetudiant AS id, nom, prenom, mail, niveau, 'Élève' AS role FROM eleves`;
+      await sql`SELECT numeroetudiant AS id, nom, prenom, mail, niveau, filiere, niveau, 'Élève' AS role FROM eleves`;
     const profs =
       await sql`SELECT id, nom, prenom, mail, matiere, 'Professeur' AS role FROM profs`;
     const admins =
