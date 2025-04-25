@@ -193,8 +193,8 @@ const EleveSubNavbar = () => (
     <nav className="bg-white p-4 text-gray-700 shadow-md flex justify-center">
       <ul className="flex space-x-4">
         <li>
-          <a href="/portal/student/courses" className="hover:underline">
-            My Courses
+          <a href="/portal/student/notes" className="hover:underline">
+            My Grades
           </a>
         </li>
         <li>
