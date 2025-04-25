@@ -7,8 +7,13 @@ if (!process.env.POSTGRES_URL) {
 
 const sql = postgres(process.env.POSTGRES_URL, { ssl: "require" });
 
-export async function GET(req: NextRequest, context: { params: { classe: string } }) {
-  const { classe } = context.params;
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const classe = searchParams.get("classe");
+
+  if (!classe) {
+    return new Response("Classe not provided", { status: 400 });
+  }
 
   const [niveau, ...filiereParts] = decodeURIComponent(classe).split(" ");
   const filiere = filiereParts.join(" ");
