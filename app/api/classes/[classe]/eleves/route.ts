@@ -4,10 +4,10 @@ import postgres from "postgres";
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 export async function GET(
-req: NextRequest,
-context: { params: { classe: string } }
+  req: NextRequest,
+  { params }: { params: { classe: string } }
 ) {
-const { classe } = context.params;
+  const { classe } = params;
 
 const [niveau, ...filiereParts] = decodeURIComponent(classe).split(" ");
 const filiere = filiereParts.join(" ");
