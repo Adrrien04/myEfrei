@@ -98,10 +98,10 @@ const AdminDashboardPage = () => {
         <h2 className="text-xl font-bold mb-4">📢 Infos & Assistance</h2>
         <p className="text-gray-700">
           Besoin d'aide ? Consultez la{" "}
-          <a href="/portal/help" className="text-blue-600 underline">
+          <a href="https://github.com/fluffykoo/myEfrei" className="text-blue-600 underline">
             FAQ
           </a>{" "}
-          ou contactez l'équipe support.
+          ou contactez les développeurs.
         </p>
       </div>
     </div>
