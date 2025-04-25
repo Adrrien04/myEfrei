@@ -81,16 +81,21 @@ export default function ProfNotesPage() {
         <h2 className="text-2xl font-bold mb-6">📚 Mes cours</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {cours.map((c) => (
-              <div
-                  key={c.id}
-                  className="border rounded-xl p-4 shadow hover:shadow-lg transition cursor-pointer bg-white"
-                  onClick={() => handleCoursClick(c.classe)}
-              >
-                <h3 className="text-lg font-semibold">{c.nom}</h3>
-                <p className="text-gray-600">{c.matiere}</p>
-                <p className="text-sm text-gray-500">Classe : {c.classe}</p>
-              </div>
+          {cours.flatMap((c) => 
+            c.classe.split(",").map((classe) => ({
+              ...c,
+              classe: classe.trim()
+            }))
+          ).map((c) => (
+            <div
+              key={`${c.id}-${c.classe}`}
+              className="border rounded-xl p-4 shadow hover:shadow-lg transition cursor-pointer bg-white"
+              onClick={() => handleCoursClick(c.classe)}
+            >
+              <h3 className="text-lg font-semibold">{c.nom}</h3>
+              <p className="text-gray-600">{c.matiere}</p>
+              <p className="text-sm text-gray-500">Classe : {c.classe}</p>
+            </div>
           ))}
         </div>
 

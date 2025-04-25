@@ -37,9 +37,20 @@ export async function POST(req: NextRequest) {
     `;
 
     const classe = `${student.niveau} ${student.filiere}`;
+    const [existingCourse] = await sql`
+      SELECT classe FROM cours WHERE id = ${id_cours}
+    `;
+
+    const existingClasses = existingCourse?.classe ? existingCourse.classe.split(", ") : [];
+    if (!existingClasses.includes(classe)) {
+      existingClasses.push(classe);
+    }
+
+    const updatedClasses = existingClasses.join(", ");
+
     await sql`
       UPDATE cours
-      SET classe = ${classe}
+      SET classe = ${updatedClasses}
       WHERE id = ${id_cours}
     `;
 

@@ -137,9 +137,13 @@ const AdminUsersPage = () => {
         body: JSON.stringify({ ...newUser, id }),
       });
 
-      if (!response.ok) throw new Error("Failed to add user");
-      const addedUser = await response.json();
-      setUsers([...users, addedUser]);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to add user");
+      }
+
+      setUsers([...users, result]);
     } catch (error) {
       console.error("Failed to add user:", error);
     }
