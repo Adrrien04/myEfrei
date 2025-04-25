@@ -36,6 +36,13 @@ export async function POST(req: NextRequest) {
       SELECT emploi_du_temps, niveau, filiere FROM eleves WHERE numeroetudiant = ${id_etudiant}
     `;
 
+    const classe = `${student.niveau} ${student.filiere}`;
+    await sql`
+      UPDATE cours
+      SET classe = ${classe}
+      WHERE id = ${id_cours}
+    `;
+
     const emploiDuTemps = student?.emploi_du_temps ?? [];
     const newEntry = {
       jour,
