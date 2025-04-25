@@ -8,7 +8,9 @@ export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
   }
 
   const token = authHeader.split(" ")[1];
@@ -18,7 +20,9 @@ export async function GET(req: NextRequest) {
     const decoded = jwt.verify(token, process.env.AUTH_SECRET!) as any;
     profId = decoded.id;
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Invalid token" }), { status: 401 });
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+    });
   }
 
   const cours = await sql`

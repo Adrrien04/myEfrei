@@ -57,8 +57,8 @@ export default function Page() {
             <Link
               href="/login"
               className="mt-4 flex items-center gap-5 self-start rounded-lg bg-blue-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-950 md:text-base"
-              >
-            SE CONNECTER
+            >
+              SE CONNECTER
             </Link>
           </div>
 

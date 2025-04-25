@@ -20,28 +20,28 @@
 
 ## 📑 Pages principales
 
-| Page                          | Description                          |
-|-------------------------------|--------------------------------------|
-| `/`                           | Page d’accueil                       |
-| `/login`                      | Connexion                            |
-| `/dashboard`                  | Tableau de bord général              |
-| `/portal/student/schedule`    | Emploi du temps étudiant             |
-| `/portal/profs/schedule`      | Emploi du temps professeur           |
-| `/portal/admin/cours`         | Gestion des cours (admin)           |
-| `/portal/admin/news`          | Gestion des articles (admin)        |
-| `/portal/admin/events`        | Gestion des événements (admin)      |
-| `/portal/admin/slides`        | Gestion des présentations/slides    |
+| Page                       | Description                      |
+| -------------------------- | -------------------------------- |
+| `/`                        | Page d’accueil                   |
+| `/login`                   | Connexion                        |
+| `/dashboard`               | Tableau de bord général          |
+| `/portal/student/schedule` | Emploi du temps étudiant         |
+| `/portal/profs/schedule`   | Emploi du temps professeur       |
+| `/portal/admin/cours`      | Gestion des cours (admin)        |
+| `/portal/admin/news`       | Gestion des articles (admin)     |
+| `/portal/admin/events`     | Gestion des événements (admin)   |
+| `/portal/admin/slides`     | Gestion des présentations/slides |
 
 ---
 
 ## ⚙️ Structure du projet
 
 app/
-├─ api/                   # Backend - Routes API
-├─ portal/                # Frontend - Pages par rôle
-├─ ui/                    # Composants React réutilisables
-├─ lib/                   # Fonctions, types
-├─ login/, dashboard/     # Pages globales
+├─ api/ # Backend - Routes API
+├─ portal/ # Frontend - Pages par rôle
+├─ ui/ # Composants React réutilisables
+├─ lib/ # Fonctions, types
+├─ login/, dashboard/ # Pages globales
 
 ---
 
@@ -50,6 +50,7 @@ app/
 Le backend est intégré au projet grâce aux routes API de Next.js (`app/api/`).
 
 ### Exemples :
+
 - `POST /api/articles` : ajouter un article
 - `GET /api/student/schedule` : récupérer l’emploi du temps étudiant
 - `POST /api/events` : créer un événement
@@ -90,6 +91,7 @@ pnpm dev
 ```
 
 ---
+
 ⸻
 
 🧑‍💻 Auteurs

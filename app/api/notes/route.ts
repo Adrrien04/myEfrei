@@ -9,7 +9,9 @@ export async function POST(req: NextRequest) {
     const { id_eleve, id_cours, note, commentaire } = body;
 
     if (!id_eleve || !id_cours || note == null) {
-      return new Response(JSON.stringify({ error: "Champs manquants" }), { status: 400 });
+      return new Response(JSON.stringify({ error: "Champs manquants" }), {
+        status: 400,
+      });
     }
 
     await sql`
@@ -17,9 +19,14 @@ export async function POST(req: NextRequest) {
       VALUES (${id_eleve}, ${id_cours}, ${note}, ${commentaire})
     `;
 
-    return new Response(JSON.stringify({ message: "Note enregistrée avec succès" }), { status: 201 });
+    return new Response(
+      JSON.stringify({ message: "Note enregistrée avec succès" }),
+      { status: 201 },
+    );
   } catch (error) {
     console.error("Erreur POST /api/notes :", error);
-    return new Response(JSON.stringify({ error: "Erreur serveur" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Erreur serveur" }), {
+      status: 500,
+    });
   }
 }

@@ -18,7 +18,9 @@ const ManageScheduleByClassePage = () => {
     if (!selectedFiliere || !niveau) return;
 
     try {
-      const res = await fetch(`/api/admin/edt?filiere=${selectedFiliere}&niveau=${niveau}`);
+      const res = await fetch(
+        `/api/admin/edt?filiere=${selectedFiliere}&niveau=${niveau}`,
+      );
       const data = await res.json();
 
       if (res.ok) {

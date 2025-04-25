@@ -69,9 +69,8 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { authenticated: false, error: "Rôle non reconnu" },
-      { status: 401 }
+      { status: 401 },
     );
-
   } catch (error) {
     console.log("Token invalide :", error);
     return NextResponse.json({ authenticated: false }, { status: 401 });

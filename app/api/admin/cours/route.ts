@@ -26,7 +26,10 @@ export async function GET() {
     return NextResponse.json(cours);
   } catch (error) {
     console.error(" GET /cours :", error);
-    return NextResponse.json({ error: "Erreur lors de la récupération des cours" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération des cours" },
+      { status: 500 },
+    );
   }
 }
 
@@ -36,14 +39,20 @@ export async function POST(req: Request) {
     const { nom, id_prof, matiere } = await req.json();
 
     if (!nom || !id_prof || !matiere) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Champs requis manquants" },
+        { status: 400 },
+      );
     }
 
     const courseId = generateCourseId();
 
     const [prof] = await sql`SELECT id FROM profs WHERE id = ${id_prof}`;
     if (!prof) {
-      return NextResponse.json({ error: "Professeur introuvable" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Professeur introuvable" },
+        { status: 404 },
+      );
     }
 
     const [newCourse] = await sql.unsafe(`
@@ -55,7 +64,10 @@ export async function POST(req: Request) {
     return NextResponse.json(newCourse);
   } catch (error) {
     console.error(" POST /cours :", error);
-    return NextResponse.json({ error: "Erreur lors de l'ajout du cours" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de l'ajout du cours" },
+      { status: 500 },
+    );
   }
 }
 
@@ -65,12 +77,18 @@ export async function PUT(req: Request) {
     const { id, nom, id_prof, matiere } = await req.json();
 
     if (!id || !nom || !id_prof || !matiere) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Champs requis manquants" },
+        { status: 400 },
+      );
     }
 
     const [prof] = await sql`SELECT id FROM profs WHERE id = ${id_prof}`;
     if (!prof) {
-      return NextResponse.json({ error: "Professeur introuvable" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Professeur introuvable" },
+        { status: 404 },
+      );
     }
 
     await sql`
@@ -81,7 +99,10 @@ export async function PUT(req: Request) {
     return NextResponse.json({ message: "Cours mis à jour" });
   } catch (error) {
     console.error(" PUT /cours :", error);
-    return NextResponse.json({ error: "Erreur lors de la mise à jour du cours" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la mise à jour du cours" },
+      { status: 500 },
+    );
   }
 }
 
@@ -98,6 +119,9 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ message: "Cours supprimé" });
   } catch (error) {
     console.error(" DELETE /cours :", error);
-    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression" },
+      { status: 500 },
+    );
   }
 }

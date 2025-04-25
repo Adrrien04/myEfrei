@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         {
           error: "Tous les champs sont requis (cours, étudiant, jour, horaire)",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     if (!cours) {
       return NextResponse.json(
         { error: "Cours ou professeur introuvable" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -41,7 +41,9 @@ export async function POST(req: NextRequest) {
       SELECT classe FROM cours WHERE id = ${id_cours}
     `;
 
-    const existingClasses = existingCourse?.classe ? existingCourse.classe.split(", ") : [];
+    const existingClasses = existingCourse?.classe
+      ? existingCourse.classe.split(", ")
+      : [];
     if (!existingClasses.includes(classe)) {
       existingClasses.push(classe);
     }
@@ -95,18 +97,20 @@ export async function POST(req: NextRequest) {
     console.error(" Erreur POST /api/admin/attributions :", error);
     return NextResponse.json(
       { error: "Erreur lors de l'attribution" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 export async function PUT(req: NextRequest) {
   try {
     const { id_etudiant, jour, heure, newJour, newHeure } = await req.json();
 
     if (!id_etudiant || !jour || !heure || !newJour || !newHeure) {
-      return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Tous les champs sont requis" },
+        { status: 400 },
+      );
     }
 
     const [student] = await sql`
@@ -129,7 +133,10 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ message: "Cours déplacé avec succès" });
   } catch (error) {
     console.error(" Erreur PUT /api/admin/attributions :", error);
-    return NextResponse.json({ error: "Erreur lors de la modification" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la modification" },
+      { status: 500 },
+    );
   }
 }
 
@@ -148,7 +155,7 @@ export async function DELETE(req: NextRequest) {
     const emploi = student?.emploi_du_temps ?? [];
 
     const updated = emploi.filter(
-      (item: any) => item.jour !== jour || item.heure !== heure
+      (item: any) => item.jour !== jour || item.heure !== heure,
     );
 
     await sql`
@@ -158,6 +165,9 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ message: "Cours supprimé avec succès" });
   } catch (error) {
     console.error(" Erreur DELETE /api/admin/attributions :", error);
-    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression" },
+      { status: 500 },
+    );
   }
 }

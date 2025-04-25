@@ -11,7 +11,6 @@ export async function GET(req: Request) {
     let filiere = searchParams.get("filiere");
     const niveau = searchParams.get("niveau");
 
-
     if (!filiere || !niveau) {
       return NextResponse.json(
         { error: "La filière et le niveau sont requis." },
@@ -20,7 +19,12 @@ export async function GET(req: Request) {
     }
 
     filiere = filiere.replace("%20", " ").replace("&", "AND");
-    console.log("Recherche des étudiants avec filière:", filiere, "et niveau:", niveau);
+    console.log(
+      "Recherche des étudiants avec filière:",
+      filiere,
+      "et niveau:",
+      niveau,
+    );
 
     const etudiants = await sql`
             SELECT id, numeroetudiant, nom, prenom, filiere, niveau 

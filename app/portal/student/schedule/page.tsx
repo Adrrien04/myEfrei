@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 const SchedulePage = () => {
   const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
   const heures = ["08h-10h", "10h-12h", "12h-14h", "14h-16h", "16h-18h"];
-  const [schedule, setSchedule] = useState<Record<string, Record<string, string>>>({});
+  const [schedule, setSchedule] = useState<
+    Record<string, Record<string, string>>
+  >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +14,8 @@ const SchedulePage = () => {
     const fetchSchedule = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) throw new Error("Utilisateur non connecté (token manquant)");
+        if (!token)
+          throw new Error("Utilisateur non connecté (token manquant)");
 
         const response = await fetch("/api/auth/check", {
           headers: {
@@ -36,7 +39,6 @@ const SchedulePage = () => {
         );
 
         const scheduleData = await scheduleResponse.json();
-        
 
         if (!scheduleResponse.ok || !scheduleData.emploi_du_temps) {
           throw new Error("Aucun emploi du temps trouvé");

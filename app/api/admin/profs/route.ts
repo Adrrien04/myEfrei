@@ -7,7 +7,9 @@ const sql = postgres(process.env.POSTGRES_URL!, {
 
 export async function GET() {
   try {
-    console.log("🟢 GET /api/admin/profs - Récupération des profs avec leurs cours");
+    console.log(
+      "🟢 GET /api/admin/profs - Récupération des profs avec leurs cours",
+    );
 
     const profs = await sql`
       SELECT
@@ -49,8 +51,8 @@ export async function GET() {
   } catch (error) {
     console.error("❌ Erreur GET /api/admin/profs:", error);
     return NextResponse.json(
-        { error: "Erreur lors de la récupération des professeurs" },
-        { status: 500 }
+      { error: "Erreur lors de la récupération des professeurs" },
+      { status: 500 },
     );
   }
 }

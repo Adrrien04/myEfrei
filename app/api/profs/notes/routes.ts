@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     if (!id_prof || !id_eleve || !id_cours || note === undefined) {
       return NextResponse.json(
         { error: "Tous les champs (prof, élève, cours, note) sont requis" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     if (!cours) {
       return NextResponse.json(
         { error: "Le professeur n'enseigne pas ce cours" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     console.error("Erreur POST /api/profs/notes :", error);
     return NextResponse.json(
       { error: "Erreur lors de l'enregistrement de la note" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     if (!id_prof || !id_cours) {
       return NextResponse.json(
         { error: "id_prof et id_cours sont requis" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     if (cours.length === 0) {
       return NextResponse.json(
         { error: "Ce cours n'est pas enseigné par ce professeur" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
     console.error("Erreur GET /api/profs/notes :", error);
     return NextResponse.json(
       { error: "Erreur lors de la récupération des élèves" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

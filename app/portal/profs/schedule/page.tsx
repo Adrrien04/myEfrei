@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 const SchedulePageProf = () => {
   const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
   const heures = ["08h-10h", "10h-12h", "12h-14h", "14h-16h", "16h-18h"];
-  const [schedule, setSchedule] = useState<Record<string, Record<string, string>>>({});
+  const [schedule, setSchedule] = useState<
+    Record<string, Record<string, string>>
+  >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +14,8 @@ const SchedulePageProf = () => {
     const fetchSchedule = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) throw new Error("Utilisateur non connecté (token manquant)");
+        if (!token)
+          throw new Error("Utilisateur non connecté (token manquant)");
 
         const response = await fetch("/api/auth/check", {
           headers: {
@@ -21,7 +24,11 @@ const SchedulePageProf = () => {
         });
 
         const userData = await response.json();
-        if (!response.ok || !userData.authenticated || userData.role !== "profs") {
+        if (
+          !response.ok ||
+          !userData.authenticated ||
+          userData.role !== "profs"
+        ) {
           throw new Error("Accès réservé aux professeurs");
         }
 
@@ -31,11 +38,10 @@ const SchedulePageProf = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         const scheduleData = await scheduleResponse.json();
-        
 
         if (!scheduleResponse.ok || !Array.isArray(scheduleData)) {
           throw new Error("Aucun emploi du temps trouvé");
@@ -43,10 +49,11 @@ const SchedulePageProf = () => {
 
         const parsedSchedule: Record<string, Record<string, string>> = {};
 
-      scheduleData.forEach((entry: any) => {
+        scheduleData.forEach((entry: any) => {
           const { jour, heure, cours, groupe } = entry;
           if (!parsedSchedule[jour]) parsedSchedule[jour] = {};
-          parsedSchedule[jour][heure] = `${cours}<br/><span class='text-sm text-gray-500'>Classe : ${groupe}</span>`;
+          parsedSchedule[jour][heure] =
+            `${cours}<br/><span class='text-sm text-gray-500'>Classe : ${groupe}</span>`;
         });
 
         setSchedule(parsedSchedule);
@@ -66,13 +73,17 @@ const SchedulePageProf = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-center">📅 Emploi du temps professeur</h1>
+      <h1 className="text-2xl font-bold text-center">
+        📅 Emploi du temps professeur
+      </h1>
       <table className="w-full border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">Heures</th>
             {jours.map((jour) => (
-              <th key={jour} className="border p-2">{jour}</th>
+              <th key={jour} className="border p-2">
+                {jour}
+              </th>
             ))}
           </tr>
         </thead>

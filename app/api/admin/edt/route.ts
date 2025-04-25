@@ -10,11 +10,14 @@ export async function GET(req: NextRequest) {
   const filiere = searchParams.get("filiere");
   const niveau = searchParams.get("niveau");
 
-if (!filiere || !niveau) {
-    return NextResponse.json({ error: "Filière et niveau requis" }, { status: 400 });
-}
+  if (!filiere || !niveau) {
+    return NextResponse.json(
+      { error: "Filière et niveau requis" },
+      { status: 400 },
+    );
+  }
 
-try {
+  try {
     const rows = await sql`
     SELECT t.jour, t.horaire AS heure, cours.nom AS cours, profs.nom || ' ' || profs.prenom AS prof
     FROM eleves

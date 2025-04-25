@@ -31,6 +31,8 @@ export async function GET(req: Request) {
   }
 
   return NextResponse.json({
-    emploi_du_temps: Array.isArray(data.emploi_du_temps) ? data.emploi_du_temps : [],
+    emploi_du_temps: Array.isArray(data.emploi_du_temps)
+      ? data.emploi_du_temps
+      : [],
   });
 }
