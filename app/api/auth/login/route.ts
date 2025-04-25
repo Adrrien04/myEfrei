@@ -9,12 +9,12 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     const users = await sql`
-            SELECT 'admins' AS role, mail, mdp, nom AS name, prenom AS surname, NULL AS numeroetudiant FROM admins WHERE mail = ${email}
-            UNION
-            SELECT 'profs' AS role, mail, mdp, nom AS name, prenom AS surname, NULL AS numeroetudiant FROM profs WHERE mail = ${email}
-            UNION
-            SELECT 'eleves' AS role, mail, mdp, nom AS name, prenom AS surname, numeroetudiant FROM eleves WHERE mail = ${email};
-        `;
+      SELECT 'admins' AS role, mail, mdp, nom AS name, prenom AS surname, NULL AS id, NULL AS numeroetudiant FROM admins WHERE mail = ${email}
+      UNION
+      SELECT 'profs' AS role, mail, mdp, nom AS name, prenom AS surname, id, NULL AS numeroetudiant FROM profs WHERE mail = ${email}
+      UNION
+      SELECT 'eleves' AS role, mail, mdp, nom AS name, prenom AS surname, NULL AS id, numeroetudiant FROM eleves WHERE mail = ${email};
+    `;
 
     if (users.length === 0) {
       return new Response(
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
       name: user.name,
       surname: user.surname,
       role: user.role,
+      id: user.numeroetudiant || user.id || null, // Assure que id_prof est bien défini si prof
     };
 
     if (user.role === "eleves") {
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
         message: "Connexion réussie.",
         role: user.role,
         token,
-        numeroetudiant: user.numeroetudiant || null,
+        id: user.numeroetudiant || user.id || null,
       }),
       { status: 200 },
     );

@@ -35,14 +35,15 @@ const SchedulePageProf = () => {
         );
 
         const scheduleData = await scheduleResponse.json();
+        
 
-        if (!scheduleResponse.ok || !Array.isArray(scheduleData.emploi_du_temps)) {
+        if (!scheduleResponse.ok || !Array.isArray(scheduleData)) {
           throw new Error("Aucun emploi du temps trouvé");
         }
 
         const parsedSchedule: Record<string, Record<string, string>> = {};
 
-       scheduleData.emploi_du_temps.forEach((entry: any) => {
+      scheduleData.forEach((entry: any) => {
           const { jour, heure, cours, groupe } = entry;
           if (!parsedSchedule[jour]) parsedSchedule[jour] = {};
           parsedSchedule[jour][heure] = `${cours}<br/><span class='text-sm text-gray-500'>Classe : ${groupe}</span>`;

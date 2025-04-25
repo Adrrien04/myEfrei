@@ -21,14 +21,21 @@ export async function GET(req: Request) {
     .from("profs")
     .select("emploi_du_temps")
     .eq("id", idProf)
-    .single();
+    .maybeSingle();
 
-  if (error || !data?.emploi_du_temps) {
+  if (error) {
     return NextResponse.json(
-      { error: "Emploi du temps non trouvé" },
+      { error: error.message },
+      { status: 500 },
+    );
+  }
+
+  if (!data || !data.emploi_du_temps) {
+    return NextResponse.json(
+      { error: "Aucun emploi du temps trouvé pour ce professeur" },
       { status: 404 },
     );
   }
 
-  return NextResponse.json({ emploi_du_temps: data.emploi_du_temps });
+  return NextResponse.json(data.emploi_du_temps);
 }
