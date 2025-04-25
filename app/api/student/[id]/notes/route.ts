@@ -5,21 +5,37 @@ const sql = postgres(process.env.POSTGRES_URL!, {
 ssl: { rejectUnauthorized: false },
 });
 
-export async function GET(request: NextRequest) {
-try {
-    const url = new URL(request.url);
-    const pathSegments = url.pathname.split("/");
-    const uuid = pathSegments[pathSegments.length - 2]; 
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+    const numeroEtudiant = params.id;
+    
 
-    const notes = await sql`
-    SELECT 
-        n.note,
-        n.commentaire,
-        c.nom AS cours
-    FROM notes n
-    JOIN cours c ON n.id_cours = c.id
-    WHERE n.id_eleve = ${uuid}
-    `;
+try {
+  //récupérer l'id à partir du numéro étudiant
+const [eleve] = await sql`
+SELECT id FROM eleves WHERE numeroetudiant = ${numeroEtudiant}
+`;
+
+if (!eleve) {
+return NextResponse.json({ error: "Élève non trouvé" }, { status: 404 });
+}
+
+const id_eleve = eleve.id;
+
+
+const notes = await sql`
+
+SELECT 
+    n.note,
+    n.commentaire,
+    c.nom AS cours,
+    c.matiere,
+    p.nom AS professeur
+FROM notes n
+JOIN cours c ON n.id_cours = c.id
+JOIN profs p ON c.id_prof = p.id
+WHERE n.id_eleve = ${id_eleve}
+`;
+
 
     return NextResponse.json(notes);
 } catch (error) {
